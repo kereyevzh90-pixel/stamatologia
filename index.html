@@ -46,7 +46,7 @@
           Принимаем взрослых и детей от 3 лет.
         </p>
         <div class="hero__actions">
-          <a href="#" class="btn btn--primary btn--lg">Записаться онлайн</a>
+          <a href="#" class="btn btn--primary btn--lg" onclick="openBooking(); return false;">Записаться онлайн</a>
           <a href="#services" class="btn btn--ghost btn--lg">Наши услуги</a>
         </div>
         <div class="hero__stats">
@@ -101,6 +101,20 @@
     </div>
   </section>
 
+
+  <!-- BOOKING MODAL -->
+  <div class="modal-overlay" id="bookingModal" onclick="closeModal(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="closeBooking()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLSdVTmqmCnJa6xuVlJ4SATj3m313QoMBZebPlJOB6IbhNy0x5w/viewform?embedded=true"
+        width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0">
+        Загрузка…
+      </iframe>
+    </div>
+  </div>
 
   <!-- CHAT WIDGET -->
   <div class="chat-bubble" id="chatBubble" onclick="toggleChat()">
@@ -274,6 +288,18 @@
     setTimeout(() => {
       document.getElementById('chatDot').style.display = 'block';
     }, 3000);
+
+    function openBooking() {
+      document.getElementById('bookingModal').classList.add('modal-overlay--open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeBooking() {
+      document.getElementById('bookingModal').classList.remove('modal-overlay--open');
+      document.body.style.overflow = '';
+    }
+    function closeModal(e) {
+      if (e.target === document.getElementById('bookingModal')) closeBooking();
+    }
   </script>
 
 </body>

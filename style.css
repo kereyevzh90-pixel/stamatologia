@@ -310,6 +310,51 @@ body {
 }
 
 /* ── RESPONSIVE ──────────────────────────────── */
+/* ── BOOKING MODAL ───────────────────────────── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay--open { display: flex; }
+
+.modal {
+  position: relative;
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 560px;
+  height: 80vh;
+  max-height: 680px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  color: var(--muted);
+}
+.modal-close:hover { color: var(--text); }
+
 /* ── CHAT WIDGET ─────────────────────────────── */
 .chat-bubble {
   position: fixed;
