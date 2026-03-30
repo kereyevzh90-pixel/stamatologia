@@ -256,19 +256,33 @@
       }
     }
 
-    function sendMessage() {
+    async function sendMessage() {
       const input = document.getElementById('chatInput');
       const text = input.value.trim();
       if (!text) return;
 
       appendMsg(text, 'user');
       input.value = '';
+      document.getElementById('chatInput').disabled = true;
 
       const typing = appendTyping();
-      setTimeout(() => {
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text }),
+        });
+        const data = await res.json();
         typing.remove();
-        appendMsg(getReply(text), 'bot');
-      }, 600);
+        appendMsg(data.reply || 'Произошла ошибка, попробуйте позже.', 'bot');
+      } catch {
+        typing.remove();
+        appendMsg('Нет соединения. Позвоните нам: 8 800 123-45-67', 'bot');
+      } finally {
+        document.getElementById('chatInput').disabled = false;
+        document.getElementById('chatInput').focus();
+      }
     }
 
     function appendMsg(text, who) {
