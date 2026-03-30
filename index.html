@@ -152,6 +152,8 @@
     // ── Память о пользователе ────────────────────────────────────────────────
     let userName = null;
 
+    const BAD_WORDS = ['говно','хуй','пизда','блять','блядь','сука','ебать','ёбаный','мудак','урод','идиот','дурак','придурок','козёл','козел','шлюха','пидор','хуйня','залупа','ёб','еб'];
+
     function extractName(text) {
       const patterns = [
         /меня зовут\s+([а-яёa-z]+)/i,
@@ -162,7 +164,11 @@
       ];
       for (const p of patterns) {
         const m = text.match(p);
-        if (m) return m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase();
+        if (m) {
+          const name = m[1].toLowerCase();
+          if (BAD_WORDS.some(w => name.includes(w))) return '__bad__';
+          return m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase();
+        }
       }
       return null;
     }
@@ -194,6 +200,7 @@
         keys: ['запомни','меня зовут','зови меня','моё имя','мое имя'],
         reply: (text) => {
           const name = extractName(text);
+          if (name === '__bad__') return 'Это не очень красивое имя 😅 Скажи своё настоящее имя!';
           if (name) {
             userName = name;
             return `Запомнила! Привет, ${name} 😊 Чем могу помочь?`;
