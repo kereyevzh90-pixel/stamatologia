@@ -560,15 +560,67 @@ body {
 
 /* ── RESPONSIVE ──────────────────────────────── */
 @media (max-width: 900px) {
-  .navbar__inner { padding: 0 24px; }
+  .navbar__inner { padding: 0 20px; }
   .nav { display: none; }
-  .hero-area { padding: 64px 16px 0; }
-  .services { padding: 60px 24px 40px; }
+
+  .hero-area { padding: 64px 14px 0; }
+
+  .intro-text { padding: 28px 4px 18px; }
+  .intro-title { font-size: clamp(30px, 9vw, 44px); letter-spacing: -1px; }
+
+  /* Card tall enough to hold photo + headline + widget */
+  .hero-card {
+    height: 82vh;
+    min-height: 560px;
+    border-radius: 20px;
+    overflow: hidden;
+    background-position: 28% center;
+  }
+
+  .hero-card__contact { display: none; }
+
+  /* Headline: above the widget */
+  .hero-card__headline {
+    left: 22px;
+    bottom: 130px;
+  }
+  .hero-card__headline h2 {
+    font-size: clamp(38px, 11vw, 58px);
+    letter-spacing: -1.5px;
+  }
+
+  /* Widget: full-width strip at card bottom */
+  .booking-widget {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    min-width: unset;
+    max-width: none;
+    padding: 16px 14px 16px 18px;
+    border-radius: 16px;
+    gap: 12px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .booking-widget__title { font-size: 14px; }
+  .booking-widget__sub,
+  .booking-widget__sub2 { font-size: 11px; }
+
+  /* Services */
+  .services { padding: 48px 20px 40px; }
   .services__top { flex-direction: column; gap: 20px; }
   .services__desc { flex: none; }
-  .hero-card__contact { display: none; }
-  .hero-card__headline { left: 24px; bottom: 140px; }
-  .hero-card__headline h2 { font-size: clamp(44px, 10vw, 72px); }
-  .booking-widget { left: 16px; right: 16px; bottom: 20px; min-width: unset; }
+
+  /* Deck: slightly smaller */
+  .deck-scene,
+  .deck { width: 300px; }
+  .dk-card { width: 300px; }
+  .dk-img { height: 220px; }
+  .dk-title { font-size: 19px; }
+
+  /* Chat */
   .chat-window { width: calc(100vw - 32px); left: 16px; }
+  .chat-bubble { bottom: 20px; left: 20px; }
 }
