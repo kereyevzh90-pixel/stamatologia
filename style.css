@@ -573,7 +573,9 @@ body {
     min-height: 560px;
     border-radius: 20px;
     overflow: hidden;
-    background-position: 28% center;
+    background-size: 100% auto;
+    background-position: center 20%;
+    background-color: #0e0e18;
   }
 
   .hero-card__contact { display: none; }
