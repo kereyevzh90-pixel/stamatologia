@@ -44,7 +44,7 @@ body {
   color: var(--text);
   font-size: 15px;
   font-weight: 400;
-  opacity: 0.65;
+  opacity: 0.6;
   transition: opacity 0.2s;
 }
 .nav a:hover { opacity: 1; }
@@ -71,14 +71,11 @@ body {
   margin: 0 auto;
 }
 
-/* Intro headline */
-.intro-text {
-  padding: 40px 8px 28px;
-}
+.intro-text { padding: 40px 8px 28px; }
 
 .intro-badge {
   display: inline-block;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.07);
   color: var(--text);
   font-size: 12px;
   font-weight: 500;
@@ -95,7 +92,6 @@ body {
   letter-spacing: -1.5px;
   color: var(--text);
 }
-
 .intro-title em {
   font-family: 'Playfair Display', serif;
   font-style: italic;
@@ -117,45 +113,24 @@ body {
 .hero-card__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    160deg,
-    rgba(0,0,0,0.18) 0%,
-    rgba(0,0,0,0.28) 40%,
-    rgba(0,0,0,0.62) 100%
-  );
+  background: linear-gradient(160deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.28) 40%, rgba(0,0,0,0.62) 100%);
 }
 
-/* Contact info — right center */
 .hero-card__contact {
   position: absolute;
-  right: 48px;
-  top: 50%;
+  right: 48px; top: 50%;
   transform: translateY(-50%);
   z-index: 2;
   color: rgba(255,255,255,0.88);
-  text-align: left;
 }
+.hero-card__phone { font-size: 15px; font-weight: 500; margin-bottom: 10px; }
+.hero-card__address { font-size: 13px; line-height: 1.6; opacity: 0.75; }
 
-.hero-card__phone {
-  font-size: 15px;
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-
-.hero-card__address {
-  font-size: 13px;
-  line-height: 1.6;
-  opacity: 0.75;
-}
-
-/* Big headline — bottom left */
 .hero-card__headline {
   position: absolute;
-  bottom: 44px;
-  left: 48px;
+  bottom: 44px; left: 48px;
   z-index: 2;
 }
-
 .hero-card__headline h2 {
   font-size: clamp(52px, 7vw, 96px);
   font-weight: 800;
@@ -164,11 +139,10 @@ body {
   letter-spacing: -2.5px;
 }
 
-/* Booking widget — bottom right */
+/* Booking widget */
 .booking-widget {
   position: absolute;
-  bottom: 36px;
-  right: 40px;
+  bottom: 36px; right: 40px;
   z-index: 2;
   background: var(--white);
   border-radius: 18px;
@@ -180,36 +154,18 @@ body {
   min-width: 300px;
   max-width: 340px;
 }
-
 .booking-widget__info { flex: 1; }
-
-.booking-widget__title {
-  font-size: 15px;
-  font-weight: 500;
-  color: #111;
-  margin-bottom: 5px;
-}
-
+.booking-widget__title { font-size: 15px; font-weight: 500; color: #111; margin-bottom: 5px; }
 .booking-widget__timer { font-weight: 700; color: var(--blue); }
-
-.booking-widget__sub {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 2px;
-}
-
+.booking-widget__sub  { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
 .booking-widget__sub2 { font-size: 12px; color: var(--muted); }
 
 .booking-widget__btn {
-  width: 40px;
-  height: 40px;
+  width: 40px; height: 40px;
   border-radius: 50%;
   background: var(--blue);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   transition: background 0.2s, transform 0.15s;
 }
@@ -227,7 +183,7 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   gap: 60px;
-  margin-bottom: 64px;
+  margin-bottom: 48px;
 }
 
 .services__left { flex: 1; }
@@ -251,7 +207,6 @@ body {
   letter-spacing: -1.5px;
   color: var(--text);
 }
-
 .services__title em {
   font-family: 'Playfair Display', serif;
   font-style: italic;
@@ -266,181 +221,197 @@ body {
   padding-top: 8px;
 }
 
-/* ── CARDS AREA ──────────────────────────────── */
-.cards-area {
-  position: relative;
+/* ── DECK CAROUSEL ───────────────────────────── */
+.deck-area {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 32px;
-  padding: 40px 0 80px;
+  padding: 16px 0 48px;
+  gap: 28px;
 }
 
-.cards-watermark {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(80px, 14vw, 160px);
-  font-weight: 900;
-  color: rgba(0,0,0,0.045);
-  letter-spacing: -4px;
-  pointer-events: none;
+.deck-hint {
+  font-size: 12px;
+  color: rgba(13,13,20,0.32);
+  letter-spacing: 0.04em;
+  font-weight: 400;
   user-select: none;
-  white-space: nowrap;
-  transition: all 0.4s ease;
 }
 
-/* Nav buttons */
-.card-nav {
-  width: 48px;
-  height: 48px;
+.deck-scene {
+  perspective: 1400px;
+  width: 340px;
+  height: 480px;
+  position: relative;
+}
+
+.deck {
+  position: relative;
+  width: 340px;
+  height: 480px;
+  cursor: grab;
+  user-select: none;
+}
+.deck:active { cursor: grabbing; }
+
+/* ── DECK CARD ───────────────────────────────── */
+.dk-card {
+  position: absolute;
+  top: 0; left: 0;
+  width: 340px;
+  background: #ECEEF8;
+  border-radius: 28px;
+  overflow: hidden;
+  will-change: transform, opacity;
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+
+.dk-card:first-child { pointer-events: auto; }
+
+/* Image zone */
+.dk-img {
+  margin: 14px 14px 0;
+  border-radius: 20px;
+  height: 270px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.dk-svg {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dk-svg svg {
+  width: 200px;
+  height: 200px;
+  filter: drop-shadow(0 18px 36px rgba(0,0,0,0.20));
+}
+
+/* Card body */
+.dk-body { padding: 16px 20px 22px; }
+
+.dk-meta {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(13,13,20,0.35);
+  margin-bottom: 5px;
+}
+
+.dk-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0B1975;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+  line-height: 1.15;
+}
+
+.dk-footer {
+  display: flex;
+  align-items: center;
+}
+
+.dk-learn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #3B6EF0;
+  text-decoration: none;
+  margin-right: auto;
+  transition: gap 0.2s ease;
+}
+.dk-learn:hover { gap: 10px; }
+
+.dk-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0B1975;
+}
+
+.dk-price { display: none; }
+
+.dk-dot {
+  width: 7px; height: 7px;
+  background: #3B6EF0;
   border-radius: 50%;
-  border: 1.5px solid rgba(0,0,0,0.15);
+  display: inline-block;
+}
+
+/* ── DECK CONTROLS ───────────────────────────── */
+.deck-controls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.deck-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,0,0,0.12);
   background: var(--white);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  transition: all 0.2s;
-  flex-shrink: 0;
-  z-index: 10;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  transition: all 0.2s ease;
 }
-.card-nav:hover {
+.deck-btn:hover {
   background: var(--text);
   color: var(--white);
   border-color: var(--text);
-  transform: scale(1.06);
+  transform: scale(1.07);
 }
 
-/* ── STACK ───────────────────────────────────── */
-.cards-stack {
-  position: relative;
-  width: 240px;
-  height: 340px;
-  flex-shrink: 0;
-}
-
-/* Card positions via data-pos */
-.card {
-  position: absolute;
-  top: 0; left: 0;
-  width: 240px;
-  background: var(--white);
-  border-radius: 22px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
-  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-              opacity 0.4s ease,
-              box-shadow 0.3s ease;
-  cursor: default;
-}
-
-.card[data-pos="0"] { transform: translateY(0px)  scale(1);     z-index: 5; box-shadow: 0 16px 48px rgba(0,0,0,0.15); }
-.card[data-pos="1"] { transform: translateY(10px) scale(0.965); z-index: 4; }
-.card[data-pos="2"] { transform: translateY(20px) scale(0.930); z-index: 3; }
-.card[data-pos="3"] { transform: translateY(30px) scale(0.895); z-index: 2; }
-.card[data-pos="4"] { transform: translateY(40px) scale(0.860); z-index: 1; }
-
-/* Hover: spread the stack open */
-.cards-stack:hover .card[data-pos="0"] { transform: translateY(0px)  scale(1);     box-shadow: 0 20px 56px rgba(0,0,0,0.18); }
-.cards-stack:hover .card[data-pos="1"] { transform: translateY(18px) scale(0.955); }
-.cards-stack:hover .card[data-pos="2"] { transform: translateY(36px) scale(0.910); }
-.cards-stack:hover .card[data-pos="3"] { transform: translateY(54px) scale(0.865); }
-.cards-stack:hover .card[data-pos="4"] { transform: translateY(72px) scale(0.820); opacity: 0.7; }
-
-/* Exit animation */
-.card--exit {
-  transform: translateY(-60px) scale(0.9) !important;
-  opacity: 0 !important;
-  pointer-events: none;
-}
-
-/* Card image area */
-.card__image {
-  width: 100%;
-  height: 160px;
+.deck-dots {
   display: flex;
+  gap: 7px;
   align-items: center;
-  justify-content: center;
-  position: relative;
 }
 
-.card__icon {
-  width: 80px;
-  height: 80px;
+.dk-dot-nav {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.18);
+  cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.23,1,0.32,1);
+  border: none;
 }
-.card__icon svg { width: 100%; height: 100%; }
-
-.card__tag {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: rgba(255,255,255,0.18);
-  color: rgba(255,255,255,0.9);
-  font-size: 11px;
-  font-weight: 500;
-  padding: 4px 10px;
-  border-radius: 100px;
-  letter-spacing: 0.03em;
-  border: 1px solid rgba(255,255,255,0.2);
+.dk-dot-nav.active {
+  width: 24px;
+  border-radius: 4px;
+  background: var(--blue);
 }
-
-/* Card body */
-.card__body {
-  padding: 16px 18px 18px;
-  background: var(--white);
-}
-
-.card__title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 12px;
-  line-height: 1.3;
-}
-
-.card__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.card__price {
-  font-size: 13px;
-  color: var(--muted);
-  font-weight: 400;
-}
-
-.card__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--blue);
-  text-decoration: none;
-  transition: gap 0.2s;
-}
-.card__link:hover { gap: 7px; }
 
 /* ── SERVICES TAGS ───────────────────────────── */
 .services-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 20px;
+  gap: 10px 22px;
   justify-content: center;
-  margin-top: 8px;
   padding: 0 20px;
 }
 
 .services-tags span {
   font-size: 16px;
   font-weight: 400;
-  color: rgba(13,13,20,0.45);
+  color: rgba(13,13,20,0.4);
   cursor: pointer;
   transition: color 0.2s;
 }
@@ -455,53 +426,37 @@ body {
 /* ── MODAL ───────────────────────────────────── */
 .modal-overlay {
   display: none;
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   background: rgba(0,0,0,0.6);
   z-index: 200;
-  align-items: center;
-  justify-content: center;
+  align-items: center; justify-content: center;
   backdrop-filter: blur(4px);
 }
 .modal-overlay--open { display: flex; }
 
 .modal {
   position: relative;
-  width: 90%;
-  max-width: 640px;
-  height: 80vh;
+  width: 90%; max-width: 640px; height: 80vh;
   background: white;
   border-radius: 20px;
   overflow: hidden;
 }
 
 .modal-close {
-  position: absolute;
-  top: 12px; right: 12px;
-  z-index: 10;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(0,0,0,0.08);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute; top: 12px; right: 12px; z-index: 10;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: none; background: rgba(0,0,0,0.08); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
   transition: background 0.2s;
 }
 .modal-close:hover { background: rgba(0,0,0,0.15); }
 
 /* ── CHAT ────────────────────────────────────── */
 .chat-bubble {
-  position: fixed;
-  bottom: 28px; left: 28px;
-  z-index: 150;
-  width: 56px; height: 56px;
-  border-radius: 50%;
+  position: fixed; bottom: 28px; left: 28px; z-index: 150;
+  width: 56px; height: 56px; border-radius: 50%;
   background: var(--blue);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   box-shadow: 0 8px 24px rgba(79,110,247,0.4);
   transition: transform 0.2s, box-shadow 0.2s;
@@ -510,76 +465,44 @@ body {
 
 .chat-bubble__dot {
   display: none;
-  position: absolute;
-  top: 4px; right: 4px;
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: #EF4444;
-  border: 2px solid white;
+  position: absolute; top: 4px; right: 4px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #EF4444; border: 2px solid white;
 }
 
 .chat-window {
-  display: none;
-  flex-direction: column;
-  position: fixed;
-  bottom: 96px; left: 28px;
-  z-index: 150;
+  display: none; flex-direction: column;
+  position: fixed; bottom: 96px; left: 28px; z-index: 150;
   width: 340px; height: 480px;
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
+  background: white; border-radius: 20px; overflow: hidden;
   box-shadow: 0 20px 60px rgba(0,0,0,0.18);
 }
 .chat-window--open { display: flex; }
 
 .chat-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  background: var(--blue);
-  color: white;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px; background: var(--blue); color: white;
 }
-
 .chat-header__info { display: flex; align-items: center; gap: 10px; }
-
 .chat-avatar {
-  width: 36px; height: 36px;
-  border-radius: 50%;
+  width: 36px; height: 36px; border-radius: 50%;
   background: rgba(255,255,255,0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
 }
-
 .chat-header__name { font-size: 14px; font-weight: 600; }
 .chat-header__status { font-size: 12px; opacity: 0.8; }
 
 .chat-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: white;
-  opacity: 0.8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-  border-radius: 6px;
-  transition: opacity 0.2s;
+  background: none; border: none; cursor: pointer; color: white;
+  opacity: 0.8; display: flex; align-items: center; justify-content: center;
+  padding: 4px; border-radius: 6px; transition: opacity 0.2s;
 }
 .chat-close:hover { opacity: 1; }
 
 .chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background: #F8FAFC;
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 10px; background: #F8FAFC;
 }
 
 .chat-msg { display: flex; max-width: 85%; }
@@ -587,38 +510,25 @@ body {
 .chat-msg--user { align-self: flex-end; }
 
 .chat-msg span {
-  display: inline-block;
-  padding: 10px 14px;
-  border-radius: 14px;
-  font-size: 14px;
-  line-height: 1.5;
+  display: inline-block; padding: 10px 14px;
+  border-radius: 14px; font-size: 14px; line-height: 1.5;
 }
-
 .chat-msg--bot span {
-  background: white;
-  color: #1e293b;
+  background: white; color: #1e293b;
   border-bottom-left-radius: 4px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
-
 .chat-msg--user span {
-  background: var(--blue);
-  color: white;
+  background: var(--blue); color: white;
   border-bottom-right-radius: 4px;
 }
-
 .chat-msg--typing span {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  padding: 12px 16px;
+  display: flex; gap: 4px; align-items: center; padding: 12px 16px;
 }
 
 .dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: #94a3b8;
-  animation: blink 1.2s infinite;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #94a3b8; animation: blink 1.2s infinite;
 }
 .dot:nth-child(2) { animation-delay: 0.2s; }
 .dot:nth-child(3) { animation-delay: 0.4s; }
@@ -629,37 +539,22 @@ body {
 }
 
 .chat-input-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  border-top: 1px solid #f1f5f9;
-  background: white;
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px; border-top: 1px solid #f1f5f9; background: white;
 }
-
 .chat-input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 10px;
-  font-size: 14px;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  transition: border-color 0.2s;
+  flex: 1; padding: 10px 14px;
+  border: 1.5px solid #e2e8f0; border-radius: 10px;
+  font-size: 14px; font-family: 'Inter', sans-serif;
+  outline: none; transition: border-color 0.2s;
 }
 .chat-input:focus { border-color: var(--blue); }
 
 .chat-send {
-  width: 38px; height: 38px;
-  border-radius: 10px;
-  background: var(--blue);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-  flex-shrink: 0;
+  width: 38px; height: 38px; border-radius: 10px;
+  background: var(--blue); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.2s;
 }
 .chat-send:hover { background: var(--blue-dark); }
 
@@ -669,12 +564,11 @@ body {
   .nav { display: none; }
   .hero-area { padding: 64px 16px 0; }
   .services { padding: 60px 24px 40px; }
-  .services__top { flex-direction: column; gap: 24px; }
+  .services__top { flex-direction: column; gap: 20px; }
   .services__desc { flex: none; }
   .hero-card__contact { display: none; }
   .hero-card__headline { left: 24px; bottom: 140px; }
   .hero-card__headline h2 { font-size: clamp(44px, 10vw, 72px); }
   .booking-widget { left: 16px; right: 16px; bottom: 20px; min-width: unset; }
-  .cards-area { gap: 16px; padding: 20px 0 60px; }
   .chat-window { width: calc(100vw - 32px); left: 16px; }
 }

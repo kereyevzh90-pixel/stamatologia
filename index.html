@@ -27,32 +27,20 @@
 
   <!-- HERO AREA -->
   <div class="hero-area">
-
-    <!-- Intro headline (on lavender) -->
     <div class="intro-text">
       <span class="intro-badge">Главная страница</span>
-      <h1 class="intro-title">
-        Заботливое знакомство<br>
-        <em>онлайн</em>
-      </h1>
+      <h1 class="intro-title">Заботливое знакомство<br><em>онлайн</em></h1>
     </div>
 
-    <!-- Hero card with photo -->
     <div class="hero-card">
       <div class="hero-card__overlay"></div>
-
-      <!-- Right-center: contact info -->
       <div class="hero-card__contact">
         <p class="hero-card__phone">+7 (800) 123-45-67</p>
         <p class="hero-card__address">ул. Стоматологическая, д. 1,<br>Москва, Россия</p>
       </div>
-
-      <!-- Bottom-left: big headline -->
       <div class="hero-card__headline">
         <h2>Smile<br>Confidently</h2>
       </div>
-
-      <!-- Bottom-right: booking widget -->
       <div class="booking-widget">
         <div class="booking-widget__info">
           <div class="booking-widget__title">
@@ -82,26 +70,29 @@
         </h2>
       </div>
       <p class="services__desc">
-        Предлагаем все виды стоматологической помощи под одной крышей — эстетические трансформации, точное протезирование, ортодонтия и специализированная помощь для взрослых и детей. Ваша улыбка — наше решение.
+        Предлагаем все виды стоматологической помощи под одной крышей — эстетические трансформации, точное протезирование, ортодонтия и специализированная помощь для взрослых и детей.
       </p>
     </div>
 
-    <div class="cards-area">
-      <div class="cards-watermark" id="cardsWatermark">Имплантация</div>
-
-      <button class="card-nav card-nav--prev" id="prevBtn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-      </button>
-
-      <div class="cards-stack" id="cardsStack"></div>
-
-      <button class="card-nav card-nav--next" id="nextBtn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="9 18 15 12 9 6"/>
-        </svg>
-      </button>
+    <!-- PREMIUM DECK CAROUSEL -->
+    <div class="deck-area">
+      <div class="deck-hint">← перетащите карточку →</div>
+      <div class="deck-scene">
+        <div class="deck" id="deck" role="region" aria-label="Карусель услуг"></div>
+      </div>
+      <div class="deck-controls">
+        <button class="deck-btn" id="deckPrev" aria-label="Назад">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <div class="deck-dots" id="deckDots"></div>
+        <button class="deck-btn" id="deckNext" aria-label="Вперёд">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
     </div>
 
     <div class="services-tags">
@@ -124,22 +115,18 @@
           <line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </button>
-      <iframe
-        src="https://docs.google.com/forms/d/e/1FAIpQLSdVTmqmCnJa6xuVlJ4SATj3m313QoMBZebPlJOB6IbhNy0x5w/viewform?embedded=true"
-        width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0">
-        Загрузка…
-      </iframe>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdVTmqmCnJa6xuVlJ4SATj3m313QoMBZebPlJOB6IbhNy0x5w/viewform?embedded=true"
+        width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0">Загрузка…</iframe>
     </div>
   </div>
 
-  <!-- CHAT WIDGET -->
+  <!-- CHAT -->
   <div class="chat-bubble" id="chatBubble" onclick="toggleChat()">
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
       <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
     </svg>
     <span class="chat-bubble__dot" id="chatDot"></span>
   </div>
-
   <div class="chat-window" id="chatWindow">
     <div class="chat-header">
       <div class="chat-header__info">
@@ -172,229 +159,488 @@
     </div>
   </div>
 
-  <script>
-    // ── Countdown timer ──────────────────────────────────────────────────────
-    function updateTimer() {
-      const now = new Date();
-      const midnight = new Date();
-      midnight.setHours(24, 0, 0, 0);
-      let diff = Math.floor((midnight - now) / 1000);
-      const h = Math.floor(diff / 3600);
-      diff -= h * 3600;
-      const m = Math.floor(diff / 60);
-      const s = diff - m * 60;
-      const el = document.getElementById('bookingTimer');
-      if (el) el.textContent = `${h}ч ${String(m).padStart(2,'0')}м ${String(s).padStart(2,'0')}с`;
+<script>
+// ─────────────────────────────────────────────────────────────────
+// DECK CAROUSEL
+// ─────────────────────────────────────────────────────────────────
+
+const SERVICES = [
+  {
+    title: 'Имплантация зубов',
+    sub: 'Хирургия',
+    price: 'от 35 000 ₽',
+    gradient: 'radial-gradient(ellipse at 55% 40%, #d8d8d8 0%, #b0b2b8 60%, #9a9ca4 100%)',
+    svg: `<svg viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="c1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f0f0f0"/><stop offset="100%" stop-color="#b0b0b0"/></linearGradient>
+        <linearGradient id="c2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#c8a96e"/><stop offset="100%" stop-color="#8a6a30"/></linearGradient>
+        <filter id="sh"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="rgba(0,0,0,0.35)"/></filter>
+      </defs>
+      <g filter="url(#sh)">
+        <ellipse cx="100" cy="60" rx="38" ry="20" fill="url(#c1)" opacity="0.3"/>
+        <path d="M72 58 Q100 28 128 58 Q124 80 116 86 Q100 92 84 86 Q76 80 72 58Z" fill="url(#c1)" stroke="#c8c8c8" stroke-width="1"/>
+        <path d="M82 56 Q100 38 118 56 Q115 72 108 76 Q100 80 92 76 Q85 72 82 56Z" fill="white" opacity="0.5"/>
+        <rect x="91" y="86" width="18" height="10" rx="3" fill="#d4a84e"/>
+        <g fill="none" stroke="url(#c2)" stroke-width="3">
+          <line x1="91" y1="96" x2="109" y2="96"/>
+          <line x1="91" y1="102" x2="109" y2="102"/>
+          <line x1="91" y1="108" x2="109" y2="108"/>
+          <line x1="91" y1="114" x2="109" y2="114"/>
+          <line x1="91" y1="120" x2="109" y2="120"/>
+          <line x1="91" y1="126" x2="109" y2="126"/>
+          <line x1="91" y1="132" x2="109" y2="132"/>
+          <line x1="91" y1="138" x2="109" y2="138"/>
+          <line x1="91" y1="144" x2="109" y2="144"/>
+          <line x1="91" y1="150" x2="109" y2="150"/>
+          <line x1="91" y1="156" x2="109" y2="156"/>
+        </g>
+        <rect x="89" y="96" width="22" height="64" rx="4" fill="url(#c2)" opacity="0.15"/>
+        <path d="M94 162 Q100 172 106 162 L108 170 Q100 185 92 170Z" fill="url(#c2)"/>
+        <ellipse cx="100" cy="192" rx="20" ry="5" fill="rgba(0,0,0,0.12)"/>
+      </g>
+    </svg>`
+  },
+  {
+    title: 'Отбеливание ZOOM',
+    sub: 'Эстетика',
+    price: 'от 8 000 ₽',
+    gradient: 'radial-gradient(ellipse at 50% 45%, #eef2f8 0%, #d8dff0 60%, #c4cce4 100%)',
+    svg: `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0f0f0"/></linearGradient>
+        <filter id="sh2"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="rgba(50,80,180,0.15)"/></filter>
+      </defs>
+      <g filter="url(#sh2)">
+        <path d="M28 95 Q100 55 172 95 Q148 150 100 162 Q52 150 28 95Z" fill="url(#tg)" stroke="#e0e4f0" stroke-width="1.5"/>
+        <path d="M48 97 Q100 68 152 97 Q100 100 48 97Z" fill="white" opacity="0.6"/>
+        <rect x="42" y="97" width="22" height="28" rx="5" fill="white" stroke="#dde2f0" stroke-width="1.2"/>
+        <rect x="67" y="93" width="22" height="32" rx="5" fill="white" stroke="#dde2f0" stroke-width="1.2"/>
+        <rect x="92" y="91" width="18" height="34" rx="5" fill="white" stroke="#dde2f0" stroke-width="1.2"/>
+        <rect x="113" y="93" width="22" height="32" rx="5" fill="white" stroke="#dde2f0" stroke-width="1.2"/>
+        <rect x="138" y="97" width="22" height="28" rx="5" fill="white" stroke="#dde2f0" stroke-width="1.2"/>
+        <path d="M96 40 L98.5 48 L107 48 L100.5 52.5 L103 60 L96 56 L89 60 L91.5 52.5 L85 48 L93.5 48Z" fill="#4F6EF7" opacity="0.8"/>
+        <circle cx="148" cy="58" r="6" fill="#4F6EF7" opacity="0.5"/>
+        <circle cx="60" cy="52" r="4" fill="#4F6EF7" opacity="0.4"/>
+        <circle cx="162" cy="80" r="3" fill="#4F6EF7" opacity="0.35"/>
+      </g>
+    </svg>`
+  },
+  {
+    title: 'Брекеты и элайнеры',
+    sub: 'Ортодонтия',
+    price: 'от 45 000 ₽',
+    gradient: 'radial-gradient(ellipse at 50% 45%, #dde8f0 0%, #b8ccd8 60%, #a0b8c8 100%)',
+    svg: `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="sh3"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="rgba(0,40,80,0.18)"/></filter>
+        <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f8faff"/><stop offset="100%" stop-color="#e8eef8"/></linearGradient>
+      </defs>
+      <g filter="url(#sh3)">
+        <path d="M30 100 Q60 70 100 65 Q140 70 170 100 Q148 145 100 155 Q52 145 30 100Z" fill="url(#ag)" stroke="#d0d8e8" stroke-width="1.5"/>
+        <rect x="44" y="100" width="18" height="22" rx="4" fill="white" stroke="#c0cce0" stroke-width="1"/>
+        <rect x="65" y="96" width="18" height="26" rx="4" fill="white" stroke="#c0cce0" stroke-width="1"/>
+        <rect x="86" y="93" width="18" height="30" rx="4" fill="white" stroke="#c0cce0" stroke-width="1"/>
+        <rect x="107" y="96" width="18" height="26" rx="4" fill="white" stroke="#c0cce0" stroke-width="1"/>
+        <rect x="128" y="100" width="18" height="22" rx="4" fill="white" stroke="#c0cce0" stroke-width="1"/>
+        <rect x="48" y="107" width="10" height="8" rx="2" fill="#4F6EF7" opacity="0.7"/>
+        <rect x="69" y="105" width="10" height="8" rx="2" fill="#4F6EF7" opacity="0.7"/>
+        <rect x="90" y="103" width="10" height="8" rx="2" fill="#4F6EF7" opacity="0.7"/>
+        <rect x="111" y="105" width="10" height="8" rx="2" fill="#4F6EF7" opacity="0.7"/>
+        <rect x="132" y="107" width="10" height="8" rx="2" fill="#4F6EF7" opacity="0.7"/>
+        <path d="M53 111 L74 109 L95 107 L116 109 L137 111" stroke="#4F6EF7" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.8"/>
+      </g>
+    </svg>`
+  },
+  {
+    title: 'Коронки и виниры',
+    sub: 'Протезирование',
+    price: 'от 12 000 ₽',
+    gradient: 'radial-gradient(ellipse at 50% 45%, #f0ece0 0%, #ddd0b0 60%, #c8b888 100%)',
+    svg: `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cg" x1="0" y1="0" x2="0.7" y2="1"><stop offset="0%" stop-color="#f8f4ec"/><stop offset="100%" stop-color="#d4c090"/></linearGradient>
+        <filter id="sh4"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="rgba(80,50,0,0.2)"/></filter>
+      </defs>
+      <g filter="url(#sh4)">
+        <path d="M68 110 L62 72 L78 84 L100 60 L122 84 L138 72 L132 110 Z" fill="url(#cg)" stroke="#c4a860" stroke-width="1.5"/>
+        <path d="M70 110 L64 76 L78 87 L100 65 L122 87 L136 76 L130 110" stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="none"/>
+        <path d="M68 110 Q100 124 132 110" stroke="#c4a860" stroke-width="1.5" fill="none"/>
+        <path d="M68 110 Q100 118 132 110 L130 116 Q100 130 70 116Z" fill="url(#cg)" opacity="0.7"/>
+        <path d="M78 87 Q100 78 122 87 L118 95 Q100 90 82 95Z" fill="rgba(255,255,255,0.35)"/>
+      </g>
+    </svg>`
+  },
+  {
+    title: 'Детская стоматология',
+    sub: 'Педиатрия',
+    price: 'Консультация бесплатно',
+    gradient: 'radial-gradient(ellipse at 50% 45%, #e8f0e8 0%, #c4d8c4 60%, #a8c4a8 100%)',
+    svg: `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="sh5"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="rgba(0,60,0,0.15)"/></filter>
+      </defs>
+      <g filter="url(#sh5)">
+        <circle cx="100" cy="95" r="52" fill="white" opacity="0.9" stroke="#c0d8b8" stroke-width="1.5"/>
+        <circle cx="82" cy="84" r="7" fill="#3a3a4a"/>
+        <circle cx="118" cy="84" r="7" fill="#3a3a4a"/>
+        <circle cx="84" cy="82" r="2.5" fill="white"/>
+        <circle cx="120" cy="82" r="2.5" fill="white"/>
+        <path d="M76 108 Q100 124 124 108" stroke="#3a3a4a" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <circle cx="78" cy="108" r="3" fill="#e88"/>
+        <circle cx="122" cy="108" r="3" fill="#e88"/>
+        <path d="M90 55 Q100 44 110 55" stroke="#88bb88" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="72" cy="92" r="10" fill="rgba(232,136,136,0.25)"/>
+        <circle cx="128" cy="92" r="10" fill="rgba(232,136,136,0.25)"/>
+      </g>
+    </svg>`
+  },
+];
+
+const VISIBLE = 4;
+const ROT_STEP = 5;
+const TX_STEP  = 22;
+const TY_STEP  = 9;
+
+let current   = 0;
+let dragging  = false;
+let startX    = 0;
+let dragX     = 0;
+let velocity  = 0;
+let lastX     = 0;
+let lastT     = 0;
+let animating = false;
+
+const deckEl   = document.getElementById('deck');
+const dotsEl   = document.getElementById('deckDots');
+let cardEls    = [];
+
+function cardHTML(s) {
+  return `
+    <div class="dk-img" style="background:${s.gradient}">
+      <div class="dk-svg">${s.svg}</div>
+    </div>
+    <div class="dk-body">
+      <div class="dk-meta">${s.sub}</div>
+      <h3 class="dk-title">${s.title}</h3>
+      <div class="dk-footer">
+        <a href="#" class="dk-learn" onclick="openBooking();return false;">
+          Подробнее
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+        <span class="dk-price">${s.price}</span>
+        <span class="dk-more">Записаться <span class="dk-dot"></span></span>
+      </div>
+    </div>`;
+}
+
+function buildDeck() {
+  deckEl.innerHTML = '';
+  cardEls = [];
+
+  // Build from back to front so front card is last in DOM (highest z)
+  for (let i = VISIBLE - 1; i >= 0; i--) {
+    const idx = (current + i) % SERVICES.length;
+    const el  = document.createElement('div');
+    el.className = 'dk-card';
+    el.innerHTML = cardHTML(SERVICES[idx]);
+    deckEl.appendChild(el);
+    cardEls.unshift(el); // cardEls[0] = front
+  }
+
+  applyPositions(0, false);
+  buildDots();
+  bindFrontCard();
+}
+
+function applyPositions(drag, animated) {
+  cardEls.forEach((card, i) => {
+    const isBack = i > 0;
+    let tx, ty, rot, scale, zIdx, opacity;
+
+    if (i === 0) {
+      // Front card — follows drag
+      const lift    = Math.min(Math.abs(drag) * 0.08, 16);
+      const tiltRot = drag / 14;
+      tx      = drag;
+      ty      = -lift;
+      rot     = tiltRot;
+      scale   = 1;
+      zIdx    = 10;
+      opacity = 1;
+    } else {
+      // Back cards
+      const pull = Math.min(Math.abs(drag) / 160, 1);
+      tx      = TX_STEP * i * (1 - pull * 0.18);
+      ty      = TY_STEP * i * (1 - pull * 0.12);
+      rot     = ROT_STEP * i * (1 - pull * 0.22);
+      scale   = 1 - i * 0.02;
+      zIdx    = 10 - i;
+      opacity = i < VISIBLE ? 1 : 0;
     }
-    updateTimer();
-    setInterval(updateTimer, 1000);
 
-    // ── Stacked cards ────────────────────────────────────────────────────────
-    const SERVICES = [
-      {
-        title: 'Имплантация зубов',
-        price: 'от 35 000 ₽',
-        tag: 'Хирургия',
-        color: '#1C2B4A',
-        icon: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="40" cy="28" rx="10" ry="14" fill="rgba(255,255,255,0.3)"/><rect x="34" y="40" width="12" height="6" rx="2" fill="rgba(255,255,255,0.5)"/><rect x="36" y="46" width="8" height="18" rx="4" fill="rgba(255,255,255,0.6)"/><circle cx="40" cy="28" r="5" fill="white" opacity="0.8"/></svg>`
-      },
-      {
-        title: 'Отбеливание ZOOM',
-        price: 'от 8 000 ₽',
-        tag: 'Эстетика',
-        color: '#2D3561',
-        icon: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 44 Q40 28 60 44 Q40 60 20 44Z" fill="rgba(255,255,255,0.3)"/><path d="M22 44 Q40 31 58 44 Q40 57 22 44Z" fill="rgba(255,255,255,0.5)"/><circle cx="31" cy="44" r="4" fill="white" opacity="0.8"/><circle cx="40" cy="41" r="4" fill="white" opacity="0.8"/><circle cx="49" cy="44" r="4" fill="white" opacity="0.8"/><path d="M40 24 L41.5 29 L47 29 L42.5 32 L44 37 L40 34 L36 37 L37.5 32 L33 29 L38.5 29Z" fill="rgba(255,255,255,0.7)"/></svg>`
-      },
-      {
-        title: 'Брекеты и элайнеры',
-        price: 'от 45 000 ₽',
-        tag: 'Ортодонтия',
-        color: '#1A3A4A',
-        icon: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 42 Q40 30 62 42" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round" fill="none"/><rect x="26" y="38" width="8" height="8" rx="2" fill="rgba(255,255,255,0.5)"/><rect x="36" y="36" width="8" height="8" rx="2" fill="rgba(255,255,255,0.5)"/><rect x="46" y="38" width="8" height="8" rx="2" fill="rgba(255,255,255,0.5)"/><circle cx="30" cy="42" r="2" fill="white"/><circle cx="40" cy="40" r="2" fill="white"/><circle cx="50" cy="42" r="2" fill="white"/></svg>`
-      },
-      {
-        title: 'Коронки и виниры',
-        price: 'от 12 000 ₽',
-        tag: 'Протезирование',
-        color: '#2A1A4A',
-        icon: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M28 50 L24 32 L32 38 L40 28 L48 38 L56 32 L52 50 Z" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" stroke-linejoin="round"/><path d="M28 50 Q40 56 52 50" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="none"/></svg>`
-      },
-      {
-        title: 'Детская стоматология',
-        price: 'Консультация бесплатно',
-        tag: 'Педиатрия',
-        color: '#1A3A2A',
-        icon: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="38" r="14" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/><circle cx="35" cy="34" r="2.5" fill="white" opacity="0.8"/><circle cx="45" cy="34" r="2.5" fill="white" opacity="0.8"/><path d="M33 42 Q40 48 47 42" stroke="white" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.8"/></svg>`
-      },
-    ];
+    const ease = animated
+      ? 'transform 0.5s cubic-bezier(0.23,1,0.32,1), opacity 0.4s ease'
+      : 'none';
 
-    let currentFront = 0;
+    card.style.cssText = `
+      transform: translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(${scale});
+      z-index: ${zIdx};
+      opacity: ${opacity};
+      transition: ${ease};
+      box-shadow: ${i === 0
+        ? '0 24px 64px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.08)'
+        : `0 ${6 + i * 2}px ${20 + i * 6}px rgba(0,0,0,${0.07 - i * 0.01})`};
+    `;
+  });
+}
 
-    function buildCards() {
-      const stack = document.getElementById('cardsStack');
-      stack.innerHTML = '';
-      const total = SERVICES.length;
-      for (let i = 0; i < total; i++) {
-        const pos = i;
-        const dataIdx = (currentFront + i) % total;
-        const s = SERVICES[dataIdx];
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.dataset.pos = pos;
-        card.innerHTML = `
-          <div class="card__image" style="background:${s.color}">
-            <div class="card__icon">${s.icon}</div>
-            <span class="card__tag">${s.tag}</span>
-          </div>
-          <div class="card__body">
-            <div class="card__title">${s.title}</div>
-            <div class="card__footer">
-              <span class="card__price">${s.price}</span>
-              <a href="#" class="card__link" onclick="openBooking();return false;">
-                Подробнее
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </a>
-            </div>
-          </div>`;
-        stack.appendChild(card);
-      }
-      document.getElementById('cardsWatermark').textContent = SERVICES[currentFront].tag;
+function buildDots() {
+  dotsEl.innerHTML = '';
+  SERVICES.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.className = 'dk-dot-nav' + (i === current ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+}
+
+function goTo(idx) {
+  if (animating || idx === current) return;
+  current = idx;
+  buildDeck();
+}
+
+function dismiss(dir) {
+  if (animating) return;
+  animating = true;
+
+  const front  = cardEls[0];
+  const exitX  = dir * (window.innerWidth * 0.75);
+  const exitRot = dir * 28;
+
+  front.style.transition = 'transform 0.42s cubic-bezier(0.55,0,1,0.45), opacity 0.38s ease';
+  front.style.transform  = `translate(${exitX}px, -20px) rotate(${exitRot}deg) scale(0.88)`;
+  front.style.opacity    = '0';
+
+  // Animate remaining cards to new positions
+  setTimeout(() => {
+    cardEls.slice(1).forEach((card, i) => {
+      const newPos = i;
+      const tx     = TX_STEP * newPos;
+      const ty     = TY_STEP * newPos;
+      const rot    = ROT_STEP * newPos;
+      const scale  = 1 - newPos * 0.02;
+      card.style.transition = `transform 0.45s cubic-bezier(0.23,1,0.32,1) ${i * 40}ms`;
+      card.style.transform  = `translate(${tx}px,${ty}px) rotate(${rot}deg) scale(${scale})`;
+    });
+  }, 60);
+
+  setTimeout(() => {
+    if (dir < 0) {
+      current = (current + 1) % SERVICES.length;
+    } else {
+      current = (current - 1 + SERVICES.length) % SERVICES.length;
     }
+    animating = false;
+    buildDeck();
+  }, 460);
+}
 
-    function nextCard() {
-      const stack = document.getElementById('cardsStack');
-      const frontCard = stack.querySelector('[data-pos="0"]');
-      if (!frontCard) return;
-      frontCard.classList.add('card--exit');
-      setTimeout(() => {
-        currentFront = (currentFront + 1) % SERVICES.length;
-        buildCards();
-      }, 350);
+function bindFrontCard() {
+  const front = cardEls[0];
+  if (!front) return;
+
+  front.addEventListener('mousedown', e => {
+    if (animating) return;
+    dragging = true;
+    startX   = e.clientX;
+    dragX    = 0;
+    velocity = 0;
+    lastX    = e.clientX;
+    lastT    = Date.now();
+    deckEl.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+
+  front.addEventListener('touchstart', e => {
+    if (animating) return;
+    dragging = true;
+    startX   = e.touches[0].clientX;
+    dragX    = 0;
+    velocity = 0;
+    lastX    = e.touches[0].clientX;
+    lastT    = Date.now();
+  }, { passive: true });
+}
+
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const now = Date.now();
+  const dt  = now - lastT;
+  if (dt > 0) velocity = (e.clientX - lastX) / dt * 14;
+  lastX  = e.clientX;
+  lastT  = now;
+  dragX  = e.clientX - startX;
+  applyPositions(dragX, false);
+});
+
+document.addEventListener('touchmove', e => {
+  if (!dragging) return;
+  const now = Date.now();
+  const dt  = now - lastT;
+  const cx  = e.touches[0].clientX;
+  if (dt > 0) velocity = (cx - lastX) / dt * 14;
+  lastX = cx;
+  lastT = now;
+  dragX = cx - startX;
+  applyPositions(dragX, false);
+}, { passive: true });
+
+function endDrag() {
+  if (!dragging) return;
+  dragging = false;
+  deckEl.style.cursor = '';
+
+  const projected = dragX + velocity * 5;
+  const threshold = 90;
+
+  if (projected < -threshold || velocity < -2.5) {
+    dismiss(-1);
+  } else if (projected > threshold || velocity > 2.5) {
+    dismiss(1);
+  } else {
+    dragX = 0;
+    applyPositions(0, true);
+  }
+}
+
+document.addEventListener('mouseup',   endDrag);
+document.addEventListener('touchend',  endDrag);
+document.addEventListener('mouseleave', endDrag);
+
+document.getElementById('deckNext').addEventListener('click', () => dismiss(-1));
+document.getElementById('deckPrev').addEventListener('click', () => dismiss(1));
+
+buildDeck();
+
+// ─────────────────────────────────────────────────────────────────
+// TIMER
+// ─────────────────────────────────────────────────────────────────
+function updateTimer() {
+  const now = new Date();
+  const midnight = new Date();
+  midnight.setHours(24, 0, 0, 0);
+  let diff = Math.floor((midnight - now) / 1000);
+  const h = Math.floor(diff / 3600); diff -= h * 3600;
+  const m = Math.floor(diff / 60);
+  const s = diff - m * 60;
+  const el = document.getElementById('bookingTimer');
+  if (el) el.textContent = `${h}ч ${String(m).padStart(2,'0')}м ${String(s).padStart(2,'0')}с`;
+}
+updateTimer();
+setInterval(updateTimer, 1000);
+
+// ─────────────────────────────────────────────────────────────────
+// CHAT
+// ─────────────────────────────────────────────────────────────────
+let userName = null;
+const BAD_WORDS = ['говно','хуй','пизда','блять','блядь','сука','ебать','ёбаный','мудак','урод','идиот','дурак','придурок'];
+
+function extractName(text) {
+  const patterns = [/меня зовут\s+([а-яёa-z]+)/i, /зови меня\s+([а-яёa-z]+)/i, /моё? имя\s+([а-яёa-z]+)/i];
+  for (const p of patterns) {
+    const m = text.match(p);
+    if (m) {
+      const n = m[1].toLowerCase();
+      if (BAD_WORDS.some(w => n.includes(w))) return '__bad__';
+      return m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase();
     }
+  }
+  return null;
+}
 
-    function prevCard() {
-      currentFront = (currentFront - 1 + SERVICES.length) % SERVICES.length;
-      buildCards();
+const KB = [
+  { keys: ['привет','здравствуй','добрый','хай','hello'], reply: () => userName ? `Привет, ${userName}! 👋 Чем могу помочь?` : 'Привет! 👋 Я ассистент СтомаКлиник. Спрашивайте!' },
+  { keys: ['кто ты','ты бот'], reply: 'Меня зовут Дента — ассистент клиники СтомаКлиник 🦷' },
+  { keys: ['меня зовут','зови меня','моё имя','мое имя'], reply: t => { const n=extractName(t); if(n==='__bad__') return 'Скажи своё настоящее имя!'; if(n){userName=n; return `Запомнила! Привет, ${n} 😊`;} return 'Напиши: "меня зовут Саша"'; } },
+  { keys: ['цена','цены','стоит','сколько','прайс'], reply: 'Цены:\n• Консультация — бесплатно\n• Кариес — от 2 500 ₽\n• Удаление — от 1 500 ₽\n• Отбеливание — от 8 000 ₽\n• Имплант — от 35 000 ₽' },
+  { keys: ['запись','записаться','приём'], reply: 'Записаться:\n• Кнопка «ЗАПИСАТЬСЯ» на сайте\n• Телефон: 8 800 123-45-67\n• Пн-Пт 9:00–20:00, Сб 10:00–18:00' },
+  { keys: ['часы','работает','режим','график'], reply: 'Пн–Пт: 9:00–20:00\nСб: 10:00–18:00\nВс: выходной' },
+  { keys: ['адрес','где','улица','метро'], reply: 'ул. Стоматологическая, д. 1, Москва. Метро 5 мин. Парковка бесплатно.' },
+  { keys: ['больно','боль','страшно','анестезия'], reply: 'Лечение безболезненно — современные анестетики. 90% пациентов боятся зря 😊' },
+  { keys: ['имплант'], reply: 'Nobel, Straumann. От 35 000 ₽ под ключ. Гарантия 5 лет. Рассрочка 0%.' },
+  { keys: ['отбеливание'], reply: 'ZOOM 4 — светлее на 6–10 тонов за 1 час. От 8 000 ₽.' },
+  { keys: ['детск','ребёнок','дети'], reply: 'Принимаем детей с 3 лет. Первый визит бесплатный.' },
+  { keys: ['срочно','болит','сейчас'], reply: '🆘 Острая боль: 8 800 123-45-67 — в день обращения!' },
+  { keys: ['рассрочка','кредит'], reply: 'Рассрочка 0% до 12 месяцев.' },
+  { keys: ['спасибо','пока','до свидания'], reply: 'Пожалуйста! Будьте здоровы! 😊' },
+];
+
+function getReply(text) {
+  const low = text.toLowerCase();
+  for (const item of KB) {
+    if (item.keys.some(k => low.includes(k))) {
+      const r = item.reply;
+      return typeof r === 'function' ? r(text) : r;
     }
+  }
+  return userName
+    ? `${userName}, уточни вопрос 🤔 Спроси о ценах или записи!`
+    : 'Не совсем понял 🤔 Спроси: «цены», «записаться», «режим работы»';
+}
 
-    document.getElementById('nextBtn').addEventListener('click', nextCard);
-    document.getElementById('prevBtn').addEventListener('click', prevCard);
+function toggleChat() {
+  document.getElementById('chatWindow').classList.toggle('chat-window--open');
+  document.getElementById('chatDot').style.display = 'none';
+  if (document.getElementById('chatWindow').classList.contains('chat-window--open'))
+    document.getElementById('chatInput').focus();
+}
 
-    buildCards();
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text  = input.value.trim();
+  if (!text) return;
+  appendMsg(text, 'user');
+  input.value = '';
+  const typing = appendTyping();
+  setTimeout(() => { typing.remove(); appendMsg(getReply(text), 'bot'); }, 600);
+}
 
-    // ── Chatbot ──────────────────────────────────────────────────────────────
-    let userName = null;
+function appendMsg(text, who) {
+  const box = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `chat-msg chat-msg--${who}`;
+  div.innerHTML = `<span>${text.replace(/\n/g,'<br>')}</span>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
 
-    const BAD_WORDS = ['говно','хуй','пизда','блять','блядь','сука','ебать','ёбаный','мудак','урод','идиот','дурак','придурок','козёл','козел','шлюха','пидор','хуйня','залупа','ёб','еб'];
+function appendTyping() {
+  const box = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg chat-msg--bot chat-msg--typing';
+  div.innerHTML = '<span><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>';
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
 
-    function extractName(text) {
-      const patterns = [
-        /меня зовут\s+([а-яёa-z]+)/i,
-        /я\s+([а-яёa-z]+)/i,
-        /зови меня\s+([а-яёa-z]+)/i,
-        /мое имя\s+([а-яёa-z]+)/i,
-        /моё имя\s+([а-яёa-z]+)/i,
-      ];
-      for (const p of patterns) {
-        const m = text.match(p);
-        if (m) {
-          const name = m[1].toLowerCase();
-          if (BAD_WORDS.some(w => name.includes(w))) return '__bad__';
-          return m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase();
-        }
-      }
-      return null;
-    }
+setTimeout(() => { document.getElementById('chatDot').style.display = 'block'; }, 3000);
 
-    const KB = [
-      { keys: ['привет','здравствуй','добрый','хай','hello','hi','здарова','салам'], reply: () => userName ? `Привет, ${userName}! 👋 Чем могу помочь?` : 'Привет! 👋 Я ассистент клиники СтомаКлиник. Спрашивайте о стоматологии или записи!' },
-      { keys: ['как тебя зовут','кто ты','ты бот','ты робот'], reply: 'Меня зовут Дента — виртуальный ассистент клиники СтомаКлиник 🦷' },
-      { keys: ['как дела','как ты'], reply: () => ['Отлично! 😊 Чем могу помочь?','Всё хорошо! 😄','Прекрасно! Чем могу быть полезна?'][Math.floor(Math.random()*3)] },
-      { keys: ['запомни','меня зовут','зови меня','моё имя','мое имя'], reply: (t) => { const n=extractName(t); if(n==='__bad__') return 'Скажи своё настоящее имя!'; if(n){userName=n; return `Запомнила! Привет, ${n} 😊 Чем могу помочь?`;} return 'Скажи как тебя зовут, например: "меня зовут Саша"'; } },
-      { keys: ['цена','цены','стоит','стоимость','сколько','прайс'], reply: 'Примерные цены:\n• Консультация — бесплатно\n• Кариес — от 2 500 ₽\n• Удаление — от 1 500 ₽\n• Отбеливание — от 8 000 ₽\n• Имплант — от 35 000 ₽\n\nТелефон: 8 800 123-45-67' },
-      { keys: ['запись','записаться','приём','прием','попасть'], reply: 'Записаться:\n• Онлайн — кнопка «ЗАПИСАТЬСЯ» на сайте\n• Телефон: 8 800 123-45-67 (бесплатно)\n• Пн-Пт 9:00–20:00, Сб 10:00–18:00' },
-      { keys: ['время','часы','работает','режим','график'], reply: 'Пн–Пт: 9:00–20:00\nСб: 10:00–18:00\nВс: выходной' },
-      { keys: ['адрес','где','улица','метро','проезд'], reply: 'Адрес: ул. Стоматологическая, д. 1, Москва\nМетро в 5 мин.\nПарковка бесплатно.' },
-      { keys: ['больно','боль','страшно','страх','анестезия'], reply: 'Лечение проходит безболезненно — используем современные анестетики. 90% пациентов боятся зря 😊' },
-      { keys: ['кариес','пломба'], reply: 'Лечение кариеса — 40–60 мин, световые пломбы под цвет зуба. От 2 500 ₽.' },
-      { keys: ['удаление','удалить'], reply: 'Удаление под анестезией. Простое — от 1 500 ₽, зуб мудрости — от 4 000 ₽.' },
-      { keys: ['отбеливание','белый'], reply: 'ZOOM 4 — светлее на 6–10 тонов за 1 час. От 8 000 ₽, результат 1–2 года.' },
-      { keys: ['имплант','импланты'], reply: 'Импланты Nobel, Straumann. От 35 000 ₽ под ключ. Гарантия 5 лет. Рассрочка 0%.' },
-      { keys: ['детск','ребёнок','дети'], reply: 'Принимаем детей с 3 лет! Детский стоматолог, игровая зона. Первый визит бесплатный.' },
-      { keys: ['срочно','болит','сейчас'], reply: '🆘 Острая боль: 8 800 123-45-67 — принимаем в день обращения!' },
-      { keys: ['рассрочка','кредит'], reply: 'Рассрочка 0% до 12 месяцев. Карты, наличные.' },
-      { keys: ['спасибо','пока','до свидания'], reply: 'Пожалуйста! Будьте здоровы и улыбайтесь! 😊' },
-    ];
-
-    function getReply(text) {
-      const lower = text.toLowerCase();
-      const name = extractName(text);
-      if (name && (lower.includes('зовут') || lower.includes('запомни'))) userName = name || userName;
-      for (const item of KB) {
-        if (item.keys.some(k => lower.includes(k))) {
-          const r = item.reply;
-          return typeof r === 'function' ? r(text) : r;
-        }
-      }
-      const f = [
-        userName ? `${userName}, уточни вопрос 🤔 Спроси о ценах, услугах или записи!` : 'Не совсем понял 🤔 Спроси: «цены», «как записаться», «часы работы»',
-        'Попробуй: «удаление зуба», «отбеливание», «рассрочка»',
-        'Позвони нам: 8 800 123-45-67!',
-      ];
-      return f[Math.floor(Math.random() * f.length)];
-    }
-
-    function toggleChat() {
-      const win = document.getElementById('chatWindow');
-      win.classList.toggle('chat-window--open');
-      document.getElementById('chatDot').style.display = 'none';
-      if (win.classList.contains('chat-window--open')) document.getElementById('chatInput').focus();
-    }
-
-    function sendMessage() {
-      const input = document.getElementById('chatInput');
-      const text = input.value.trim();
-      if (!text) return;
-      appendMsg(text, 'user');
-      input.value = '';
-      const typing = appendTyping();
-      setTimeout(() => { typing.remove(); appendMsg(getReply(text), 'bot'); }, 600);
-    }
-
-    function appendMsg(text, who) {
-      const box = document.getElementById('chatMessages');
-      const div = document.createElement('div');
-      div.className = `chat-msg chat-msg--${who}`;
-      div.innerHTML = `<span>${text.replace(/\n/g, '<br>')}</span>`;
-      box.appendChild(div);
-      box.scrollTop = box.scrollHeight;
-      return div;
-    }
-
-    function appendTyping() {
-      const box = document.getElementById('chatMessages');
-      const div = document.createElement('div');
-      div.className = 'chat-msg chat-msg--bot chat-msg--typing';
-      div.innerHTML = '<span><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>';
-      box.appendChild(div);
-      box.scrollTop = box.scrollHeight;
-      return div;
-    }
-
-    setTimeout(() => { document.getElementById('chatDot').style.display = 'block'; }, 3000);
-
-    function openBooking() {
-      document.getElementById('bookingModal').classList.add('modal-overlay--open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeBooking() {
-      document.getElementById('bookingModal').classList.remove('modal-overlay--open');
-      document.body.style.overflow = '';
-    }
-    function closeModal(e) {
-      if (e.target === document.getElementById('bookingModal')) closeBooking();
-    }
-  </script>
-
+function openBooking() {
+  document.getElementById('bookingModal').classList.add('modal-overlay--open');
+  document.body.style.overflow = 'hidden';
+}
+function closeBooking() {
+  document.getElementById('bookingModal').classList.remove('modal-overlay--open');
+  document.body.style.overflow = '';
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('bookingModal')) closeBooking();
+}
+</script>
 </body>
 </html>
