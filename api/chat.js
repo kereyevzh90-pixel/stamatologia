@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -64,7 +64,7 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('Gemini error:', data);
+      console.error('Gemini error:', JSON.stringify(data));
       return res.status(500).json({ error: 'AI error', detail: data.error?.message });
     }
 
@@ -72,7 +72,7 @@ export default async function handler(req, res) {
     res.json({ text });
 
   } catch (err) {
-    console.error('Handler error:', err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Handler error:', err.message);
+    res.status(500).json({ error: 'Server error', detail: err.message });
   }
-}
+};
