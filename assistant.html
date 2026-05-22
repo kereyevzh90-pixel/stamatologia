@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Дента — ИИ-ассистент СтомаКлиник</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet" />
+</head>
+<body class="ai-page">
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="navbar__inner">
+      <div class="logo">
+        <a href="index.html" style="text-decoration:none;color:inherit;">
+          <span class="logo__light">Стома</span><span class="logo__bold">Клиник</span>
+        </a>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Услуги</a>
+        <a href="index.html">Кейсы</a>
+        <a href="index.html">О нас</a>
+        <a href="index.html">Цены</a>
+        <a href="assistant.html" class="nav-ai-link">ИИ-ассистент</a>
+      </nav>
+      <a href="index.html#booking" class="btn-book" onclick="window.location='index.html'; return false;">ЗАПИСАТЬСЯ</a>
+    </div>
+  </header>
+
+  <!-- AI HERO -->
+  <div class="ai-hero-area">
+    <div class="ai-hero-inner">
+      <div class="ai-hero-text">
+        <span class="intro-badge">ИИ-Ассистент</span>
+        <h1 class="ai-hero-title">
+          Дента —<br>ваш личный<br><em>стоматолог онлайн</em>
+        </h1>
+        <p class="ai-hero-sub">
+          Ответит на любой вопрос о зубах, поможет выбрать услугу и запишет к врачу — бесплатно, прямо сейчас.
+        </p>
+        <div class="ai-hero-tags">
+          <span class="ai-tag">24/7 онлайн</span>
+          <span class="ai-tag">Мгновенно</span>
+          <span class="ai-tag">Бесплатно</span>
+        </div>
+      </div>
+      <div class="ai-hero-visual">
+        <div class="ai-orb">
+          <div class="ai-orb__ring ai-orb__ring--1"></div>
+          <div class="ai-orb__ring ai-orb__ring--2"></div>
+          <div class="ai-orb__ring ai-orb__ring--3"></div>
+          <div class="ai-orb__core">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+              <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" opacity="0.3"/>
+              <path d="M8 12s1.5 2 4 2 4-2 4-2"/>
+              <line x1="9" y1="9" x2="9.01" y2="9"/>
+              <line x1="15" y1="9" x2="15.01" y2="9"/>
+              <path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="ai-features">
+    <div class="ai-feature">
+      <div class="ai-feature__icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div class="ai-feature__title">Мгновенный ответ</div>
+      <div class="ai-feature__desc">Отвечает за секунды — не нужно ждать звонка или email</div>
+    </div>
+    <div class="ai-feature">
+      <div class="ai-feature__icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+      </div>
+      <div class="ai-feature__title">Умные ответы</div>
+      <div class="ai-feature__desc">Знает всё о наших услугах, ценах и расписании</div>
+    </div>
+    <div class="ai-feature">
+      <div class="ai-feature__icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+        </svg>
+      </div>
+      <div class="ai-feature__title">Помощь с записью</div>
+      <div class="ai-feature__desc">Подберёт удобное время и поможет оформить визит</div>
+    </div>
+    <div class="ai-feature">
+      <div class="ai-feature__icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="ai-feature__title">Конфиденциально</div>
+      <div class="ai-feature__desc">Разговор приватен, данные никуда не передаются</div>
+    </div>
+  </div>
+
+  <!-- CHAT SECTION -->
+  <div class="ai-chat-section">
+    <div class="ai-chat-wrap">
+      <div class="ai-chat">
+        <div class="ai-chat__header">
+          <div class="ai-chat__avatar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" opacity="0.5"/>
+              <path d="M8 12s1.5 2 4 2 4-2 4-2"/>
+              <line x1="9" y1="9" x2="9.01" y2="9"/>
+              <line x1="15" y1="9" x2="15.01" y2="9"/>
+            </svg>
+          </div>
+          <div>
+            <div class="ai-chat__name">Дента</div>
+            <div class="ai-chat__status">
+              <span class="ai-status-dot"></span>Онлайн — готова помочь
+            </div>
+          </div>
+          <div class="ai-chat__pill">ИИ-Ассистент</div>
+        </div>
+
+        <div class="ai-chat__messages" id="aiMessages">
+          <div class="ai-msg ai-msg--bot">
+            <div class="ai-msg__bubble">
+              Привет! Я Дента — ИИ-ассистент клиники СтомаКлиник 🦷<br><br>
+              Могу ответить на вопросы о стоматологии, рассказать о ценах, режиме работы или помочь записаться к врачу.<br><br>
+              Спрашивайте!
+            </div>
+          </div>
+          <div class="ai-quick-replies" id="quickReplies">
+            <button class="ai-quick" onclick="quickAsk('Какие цены?')">Какие цены?</button>
+            <button class="ai-quick" onclick="quickAsk('Как записаться?')">Как записаться?</button>
+            <button class="ai-quick" onclick="quickAsk('Режим работы')">Режим работы</button>
+            <button class="ai-quick" onclick="quickAsk('Имплантация — сколько стоит?')">Имплантация</button>
+            <button class="ai-quick" onclick="quickAsk('Детская стоматология')">Детям</button>
+            <button class="ai-quick" onclick="quickAsk('Адрес клиники')">Адрес</button>
+          </div>
+        </div>
+
+        <div class="ai-chat__input-row">
+          <input
+            type="text"
+            id="aiInput"
+            class="ai-chat__input"
+            placeholder="Напишите вопрос..."
+            onkeydown="if(event.key==='Enter') aiSend()"
+          />
+          <button class="ai-chat__send" onclick="aiSend()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER CTA -->
+  <div class="ai-cta">
+    <div class="ai-cta__inner">
+      <p class="ai-cta__text">Хотите записаться к врачу прямо сейчас?</p>
+      <a href="index.html" class="btn-book" style="font-size:14px;padding:12px 28px;" onclick="window.location='index.html'; setTimeout(()=>{ if(window.openBooking) openBooking(); }, 500); return false;">
+        ЗАПИСАТЬСЯ ОНЛАЙН
+      </a>
+    </div>
+  </div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────
+// CHAT LOGIC
+// ─────────────────────────────────────────────────────────────────
+let aiUserName = null;
+
+const BAD_WORDS = ['говно','хуй','пизда','блять','блядь','сука','ебать','ёбаный','мудак','урод','идиот','дурак'];
+
+function extractName(text) {
+  const patterns = [/меня зовут\s+([а-яёa-z]+)/i, /зови меня\s+([а-яёa-z]+)/i, /моё? имя\s+([а-яёa-z]+)/i];
+  for (const p of patterns) {
+    const m = text.match(p);
+    if (m) {
+      const n = m[1].toLowerCase();
+      if (BAD_WORDS.some(w => n.includes(w))) return '__bad__';
+      return m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase();
+    }
+  }
+  return null;
+}
+
+const KB = [
+  { keys: ['привет','здравствуй','добрый','хай','hello','hi'],
+    reply: () => aiUserName ? `Привет, ${aiUserName}! 👋 Чем могу помочь?` : 'Привет! 👋 Я Дента, ассистент СтомаКлиник. Задайте любой вопрос!' },
+  { keys: ['кто ты','что ты','ты бот','ты человек'],
+    reply: 'Меня зовут Дента — ИИ-ассистент клиники СтомаКлиник 🦷 Помогаю с вопросами о стоматологии 24/7.' },
+  { keys: ['меня зовут','зови меня','моё имя','мое имя'],
+    reply: t => { const n=extractName(t); if(n==='__bad__') return 'Скажи своё настоящее имя!'; if(n){aiUserName=n; return `Запомнила! Привет, ${n} 😊 Чем могу помочь?`;} return 'Напиши: «меня зовут Саша»'; } },
+  { keys: ['цена','цены','стоит','сколько','прайс','стоимость'],
+    reply: '💰 Цены:\n• Консультация — бесплатно\n• Кариес — от 2 500 ₽\n• Удаление зуба — от 1 500 ₽\n• Отбеливание ZOOM — от 8 000 ₽\n• Брекеты — от 45 000 ₽\n• Имплант — от 35 000 ₽\n• Виниры — от 12 000 ₽\n\nРассрочка 0% до 12 месяцев!' },
+  { keys: ['запись','записаться','записать','приём','прием','попасть'],
+    reply: '📅 Записаться:\n• Кнопка «ЗАПИСАТЬСЯ» на сайте\n• Телефон: 8 800 123-45-67\n• Пн–Пт 9:00–20:00, Сб 10:00–18:00\n\nКонсультация первичная — бесплатно!' },
+  { keys: ['часы','работает','режим','график','время','открыт'],
+    reply: '🕐 Режим работы:\nПн–Пт: 9:00–20:00\nСб: 10:00–18:00\nВс: выходной\n\nЗвонок: 8 800 123-45-67 (бесплатно)' },
+  { keys: ['адрес','где','улица','метро','находитесь','расположен'],
+    reply: '📍 Адрес:\nул. Стоматологическая, д. 1, Москва\n\nМетро — 5 минут пешком\nПарковка — бесплатно\nЯндекс.Карты / Google Maps: «СтомаКлиник»' },
+  { keys: ['больно','боль','больно ли','страшно','анестезия','обезболивание'],
+    reply: '😌 Не бойтесь! Мы используем современные анестетики — лечение безболезненно.\n\n90% пациентов говорят, что боялись зря.\n\nДаже сложные операции проходят комфортно.' },
+  { keys: ['имплант','имплантация','имплантат'],
+    reply: '🦷 Имплантация:\n• Nobel, Straumann, Osstem\n• От 35 000 ₽ «под ключ» (включая коронку)\n• Гарантия 5 лет\n• Рассрочка 0%\n• КТ-диагностика включена\n\nПервая консультация бесплатно!' },
+  { keys: ['отбел','zoom','белые зубы'],
+    reply: '✨ Отбеливание ZOOM 4:\n• Светлее на 6–10 тонов за 1 час\n• От 8 000 ₽\n• Без повреждения эмали\n• Результат держится 1–2 года\n\nАкция: при записи онлайн — скидка 10%!' },
+  { keys: ['детск','ребёнок','ребенок','дети','ребёнку','малыш'],
+    reply: '👶 Детская стоматология:\n• Принимаем с 3 лет\n• Первый визит — бесплатно\n• Добрые, опытные детские врачи\n• Лечение под седацией (по показаниям)\n• Подарок после приёма!' },
+  { keys: ['брекет','элайнер','ортодонт','выравнивание','прикус'],
+    reply: '😁 Ортодонтия:\n• Металлические брекеты — от 45 000 ₽\n• Сапфировые брекеты — от 65 000 ₽\n• Элайнеры Invisalign — от 120 000 ₽\n\nБесплатная консультация ортодонта!' },
+  { keys: ['винир','коронка','протез','протезирование'],
+    reply: '💎 Протезирование:\n• Виниры — от 12 000 ₽/шт\n• Коронки (цирконий) — от 15 000 ₽\n• Мосты — от 25 000 ₽\n• Съёмные протезы — от 20 000 ₽' },
+  { keys: ['срочно','болит сейчас','острая боль','экстренн'],
+    reply: '🆘 Острая боль?\nЗвоните прямо сейчас: 8 800 123-45-67\n\nПримем в день обращения!\nРаботаем Пн–Пт 9:00–20:00, Сб 10:00–18:00' },
+  { keys: ['рассрочка','кредит','оплата','платить'],
+    reply: '💳 Оплата:\n• Наличные, карта, СБП\n• Рассрочка 0% — до 12 месяцев\n• Кредит — без первоначального взноса\n• Страховка ДМС — принимаем' },
+  { keys: ['акция','скидка','акции','спецпредложение'],
+    reply: '🎁 Акции:\n• Первичная консультация — бесплатно\n• Профессиональная чистка при первом визите — в подарок\n• Семейная скидка — 15%\n• Скидка пенсионерам — 10%' },
+  { keys: ['спасибо','пока','до свидания','всё','всего'],
+    reply: () => aiUserName ? `Пожалуйста, ${aiUserName}! Будьте здоровы! 😊` : 'Пожалуйста! Будьте здоровы! 😊 Ждём вас в клинике!' },
+];
+
+function getReply(text) {
+  const low = text.toLowerCase();
+  for (const item of KB) {
+    if (item.keys.some(k => low.includes(k))) {
+      const r = item.reply;
+      return typeof r === 'function' ? r(text) : r;
+    }
+  }
+  return aiUserName
+    ? `${aiUserName}, уточни вопрос 🤔 Спроси о ценах, записи, режиме работы или конкретной услуге!`
+    : 'Не совсем понял 🤔 Попробуйте спросить:\n• «Какие цены?»\n• «Как записаться?»\n• «Режим работы»\n• «Где вы находитесь?»';
+}
+
+function quickAsk(text) {
+  const qr = document.getElementById('quickReplies');
+  if (qr) qr.remove();
+  aiAppendMsg(text, 'user');
+  const typing = aiAppendTyping();
+  setTimeout(() => { typing.remove(); aiAppendMsg(getReply(text), 'bot'); }, 500);
+}
+
+function aiSend() {
+  const input = document.getElementById('aiInput');
+  const text  = input.value.trim();
+  if (!text) return;
+  const qr = document.getElementById('quickReplies');
+  if (qr) qr.remove();
+  aiAppendMsg(text, 'user');
+  input.value = '';
+  const typing = aiAppendTyping();
+  setTimeout(() => { typing.remove(); aiAppendMsg(getReply(text), 'bot'); }, 600);
+}
+
+function aiAppendMsg(text, who) {
+  const box = document.getElementById('aiMessages');
+  const div = document.createElement('div');
+  div.className = `ai-msg ai-msg--${who}`;
+  div.innerHTML = `<div class="ai-msg__bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
+
+function aiAppendTyping() {
+  const box = document.getElementById('aiMessages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg ai-msg--bot ai-msg--typing';
+  div.innerHTML = '<div class="ai-msg__bubble"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>';
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
+</script>
+
+</body>
+</html>
