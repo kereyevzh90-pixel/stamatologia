@@ -1,3 +1,5 @@
+const https = require('https');
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -40,35 +42,55 @@ module.exports = async function handler(req, res) {
 - Если не знаешь ответа — скажи что лучше уточнить по телефону 8 800 123-45-67
 - Отвечай только на русском языке`;
 
+  const payload = JSON.stringify({
+    systemInstruction: { parts: [{ text: SYSTEM }] },
+    contents: messages,
+    generationConfig: {
+      temperature: 0.75,
+      maxOutputTokens: 400,
+    },
+    safetySettings: [
+      { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
+      { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' },
+    ]
+  });
+
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
+    const result = await new Promise((resolve, reject) => {
+      const options = {
+        hostname: 'generativelanguage.googleapis.com',
+        path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM }] },
-          contents: messages,
-          generationConfig: {
-            temperature: 0.75,
-            maxOutputTokens: 400,
-          },
-          safetySettings: [
-            { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
-            { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' },
-          ]
-        })
-      }
-    );
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload),
+        },
+      };
 
-    const data = await response.json();
+      const request = https.request(options, (response) => {
+        let raw = '';
+        response.on('data', chunk => { raw += chunk; });
+        response.on('end', () => {
+          try {
+            resolve({ status: response.statusCode, body: JSON.parse(raw) });
+          } catch (e) {
+            resolve({ status: response.statusCode, body: { error: { message: raw } } });
+          }
+        });
+      });
 
-    if (!response.ok) {
-      const errMsg = data.error?.message || JSON.stringify(data);
+      request.on('error', reject);
+      request.write(payload);
+      request.end();
+    });
+
+    if (result.status !== 200) {
+      const errMsg = result.body.error?.message || JSON.stringify(result.body);
       return res.status(200).json({ text: 'ОШИБКА GEMINI: ' + errMsg });
     }
 
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'ОШИБКА: нет candidates. Ответ: ' + JSON.stringify(data).slice(0, 200);
+    const text = result.body.candidates?.[0]?.content?.parts?.[0]?.text
+      || 'ОШИБКА: нет candidates. Ответ: ' + JSON.stringify(result.body).slice(0, 200);
     res.json({ text });
 
   } catch (err) {
