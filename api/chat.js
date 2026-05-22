@@ -64,15 +64,14 @@ module.exports = async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('Gemini error:', JSON.stringify(data));
-      return res.status(500).json({ error: 'AI error', detail: data.error?.message });
+      const errMsg = data.error?.message || JSON.stringify(data);
+      return res.status(200).json({ text: 'ОШИБКА GEMINI: ' + errMsg });
     }
 
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Извините, попробуйте повторить вопрос.';
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'ОШИБКА: нет candidates. Ответ: ' + JSON.stringify(data).slice(0, 200);
     res.json({ text });
 
   } catch (err) {
-    console.error('Handler error:', err.message);
-    res.status(500).json({ error: 'Server error', detail: err.message });
+    res.status(200).json({ text: 'ОШИБКА СЕТИ: ' + err.message });
   }
 };
