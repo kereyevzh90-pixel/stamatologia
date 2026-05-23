@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Админка — Дента</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN ── */
+    #loginScreen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 380px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.12);
+      text-align: center;
+    }
+    .login-icon {
+      width: 60px; height: 60px;
+      background: #2563EB;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .login-card h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .login-card p { font-size: 13px; color: #64748b; margin-bottom: 28px; }
+    .login-card input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+      margin-bottom: 12px;
+    }
+    .login-card input:focus { border-color: #2563EB; }
+    .login-error { color: #ef4444; font-size: 13px; margin-bottom: 8px; min-height: 18px; }
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: #2563EB;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    /* ── ADMIN PANEL ── */
+    #adminPanel { display: none; }
+
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-logo {
+      width: 36px; height: 36px;
+      background: #2563EB;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .topbar h1 { font-size: 16px; font-weight: 700; }
+    .topbar-badge {
+      font-size: 11px; font-weight: 600;
+      background: #dbeafe; color: #1d4ed8;
+      padding: 3px 8px; border-radius: 20px;
+    }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .btn-logout {
+      padding: 8px 16px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      font-family: inherit;
+      background: transparent;
+      cursor: pointer;
+      color: #64748b;
+      transition: all .2s;
+    }
+    .btn-logout:hover { border-color: #cbd5e1; color: #1e293b; }
+    .btn-site {
+      padding: 8px 16px;
+      background: #2563EB;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .btn-site:hover { background: #1d4ed8; }
+
+    .admin-body { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+
+    /* ── TABS ── */
+    .tabs { display: flex; gap: 4px; margin-bottom: 28px; }
+    .tab {
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 14px; font-weight: 500;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      background: transparent;
+      color: #64748b;
+      transition: all .2s;
+    }
+    .tab.active { background: #2563EB; color: #fff; }
+    .tab:not(.active):hover { background: #e2e8f0; color: #1e293b; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 16px; font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .card-desc {
+      font-size: 13px; color: #64748b;
+      margin-bottom: 20px; line-height: 1.5;
+    }
+
+    /* ── SYSTEM PROMPT ── */
+    .sys-textarea {
+      width: 100%;
+      height: 360px;
+      padding: 16px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 13px;
+      font-family: 'Inter', monospace;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      transition: border-color .2s;
+      color: #1e293b;
+    }
+    .sys-textarea:focus { border-color: #2563EB; }
+
+    .save-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .save-status { font-size: 13px; color: #64748b; }
+    .save-status.ok { color: #16a34a; }
+    .btn-save {
+      padding: 10px 24px;
+      background: #2563EB;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px; font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-save:hover { background: #1d4ed8; }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+
+    .faq-item {
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 12px;
+      align-items: start;
+      background: #f8fafc;
+    }
+    .faq-item.editing { border-color: #2563EB; background: #eff6ff; }
+
+    .faq-item input, .faq-item textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+      background: #fff;
+      color: #1e293b;
+    }
+    .faq-item textarea { resize: vertical; min-height: 70px; }
+    .faq-item input:focus, .faq-item textarea:focus { border-color: #2563EB; }
+
+    .faq-item-label {
+      font-size: 11px; font-weight: 600;
+      color: #94a3b8; text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 5px;
+    }
+
+    .faq-actions { display: flex; flex-direction: column; gap: 6px; padding-top: 18px; }
+    .btn-icon {
+      width: 34px; height: 34px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      background: #fff;
+      transition: all .2s;
+      font-size: 15px;
+    }
+    .btn-icon:hover { border-color: #ef4444; background: #fef2f2; }
+    .btn-icon.del:hover svg { stroke: #ef4444; }
+
+    .faq-empty {
+      text-align: center;
+      padding: 32px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .btn-add-faq {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      font-size: 14px; font-weight: 500;
+      font-family: inherit;
+      color: #64748b;
+      background: transparent;
+      cursor: pointer;
+      width: 100%;
+      justify-content: center;
+      transition: all .2s;
+    }
+    .btn-add-faq:hover { border-color: #2563EB; color: #2563EB; background: #eff6ff; }
+
+    /* ── SETTINGS TAB ── */
+    .form-group { margin-bottom: 20px; }
+    .form-label { font-size: 13px; font-weight: 600; margin-bottom: 6px; display: block; }
+    .form-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .form-input:focus { border-color: #2563EB; }
+    .form-hint { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+
+    .danger-zone {
+      border: 1.5px solid #fecaca;
+      border-radius: 12px;
+      padding: 20px;
+      background: #fff5f5;
+    }
+    .danger-title { font-size: 14px; font-weight: 700; color: #dc2626; margin-bottom: 6px; }
+    .danger-desc { font-size: 13px; color: #64748b; margin-bottom: 14px; }
+    .btn-danger {
+      padding: 9px 20px;
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-danger:hover { background: #dc2626; }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .stat-label { font-size: 12px; color: #64748b; font-weight: 500; margin-bottom: 4px; }
+    .stat-value { font-size: 24px; font-weight: 700; color: #1e293b; }
+    .stat-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+    @media (max-width: 640px) {
+      .faq-item { grid-template-columns: 1fr; }
+      .faq-actions { flex-direction: row; padding-top: 0; }
+      .stats-bar { grid-template-columns: 1fr; }
+      .topbar { padding: 0 16px; }
+      .admin-body { padding: 20px 16px; }
+      .login-card { padding: 32px 24px; width: 100%; margin: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ LOGIN ═══════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </div>
+    <h1>Вход в админку</h1>
+    <p>Управление ИИ-ассистентом Дента</p>
+    <input type="password" id="pwdInput" placeholder="Пароль" onkeydown="if(event.key==='Enter') doLogin()" />
+    <div class="login-error" id="loginError"></div>
+    <button class="btn-primary" onclick="doLogin()">Войти</button>
+  </div>
+</div>
+
+<!-- ═══════════════ ADMIN PANEL ═══════════════ -->
+<div id="adminPanel">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2">
+          <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" opacity="0.5"/>
+          <path d="M8 12s1.5 2 4 2 4-2 4-2"/>
+        </svg>
+      </div>
+      <h1>Дента Админ</h1>
+      <span class="topbar-badge">Панель управления</span>
+    </div>
+    <div class="topbar-right">
+      <a href="assistant.html" class="btn-site" target="_blank">Открыть ассистента</a>
+      <button class="btn-logout" onclick="doLogout()">Выйти</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-label">FAQ ответов</div>
+        <div class="stat-value" id="statFaqCount">0</div>
+        <div class="stat-sub">настроено вами</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Системный промпт</div>
+        <div class="stat-value" id="statPromptLen">0</div>
+        <div class="stat-sub">символов</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Режим</div>
+        <div class="stat-value" style="font-size:16px;padding-top:4px;">Gemini AI</div>
+        <div class="stat-sub">gemini-2.0-flash</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('faq', this)">FAQ ответы</button>
+      <button class="tab" onclick="switchTab('prompt', this)">Системный промпт</button>
+      <button class="tab" onclick="switchTab('settings', this)">Настройки</button>
+    </div>
+
+    <!-- ── TAB: FAQ ── -->
+    <div id="tab-faq" class="tab-panel active">
+      <div class="card">
+        <div class="card-title">FAQ — точные ответы</div>
+        <div class="card-desc">
+          Когда пользователь задаёт вопрос похожий на один из FAQ — ассистент использует ваш ответ как приоритетный источник.
+          Gemini дополняет и форматирует его, но опирается на ваши данные.
+        </div>
+
+        <div class="faq-list" id="faqList"></div>
+
+        <button class="btn-add-faq" onclick="addFaqRow()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Добавить вопрос-ответ
+        </button>
+
+        <div class="save-row">
+          <span class="save-status" id="faqStatus"></span>
+          <button class="btn-save" onclick="saveFaq()">Сохранить FAQ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: SYSTEM PROMPT ── -->
+    <div id="tab-prompt" class="tab-panel">
+      <div class="card">
+        <div class="card-title">Системный промпт</div>
+        <div class="card-desc">
+          Это главная инструкция для ИИ. Опишите кто такой ассистент, как должен общаться, какие есть ограничения, информацию о клинике.
+          Если поле пустое — используется стандартный встроенный промпт.
+        </div>
+        <textarea
+          class="sys-textarea"
+          id="sysPromptArea"
+          placeholder="Ты Дента — дружелюбный ИИ-ассистент стоматологической клиники..."></textarea>
+        <div class="save-row">
+          <span class="save-status" id="promptStatus"></span>
+          <div style="display:flex;gap:10px;">
+            <button class="btn-save" style="background:#64748b;" onclick="resetPrompt()">Сбросить к умолчанию</button>
+            <button class="btn-save" onclick="savePrompt()">Сохранить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: SETTINGS ── -->
+    <div id="tab-settings" class="tab-panel">
+      <div class="card">
+        <div class="card-title">Изменить пароль</div>
+        <div class="form-group">
+          <label class="form-label">Новый пароль</label>
+          <input type="password" class="form-input" id="newPwd1" placeholder="Введите новый пароль" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Повторите пароль</label>
+          <input type="password" class="form-input" id="newPwd2" placeholder="Повторите пароль" />
+          <div class="form-hint">Минимум 4 символа</div>
+        </div>
+        <div class="save-row">
+          <span class="save-status" id="pwdStatus"></span>
+          <button class="btn-save" onclick="changePwd()">Сменить пароль</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Зона опасности</div>
+        <div class="danger-zone">
+          <div class="danger-title">Сбросить все настройки</div>
+          <div class="danger-desc">Удалит все FAQ и системный промпт. Ассистент вернётся к встроенным настройкам по умолчанию.</div>
+          <button class="btn-danger" onclick="resetAll()">Сбросить всё</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── STORAGE KEYS ───
+const KEY_PWD    = 'dentaAdminPwd';
+const KEY_FAQ    = 'dentaFaq';
+const KEY_PROMPT = 'dentaSystemPrompt';
+const DEFAULT_PWD = 'admin123';
+
+// ─── LOGIN ───
+function doLogin() {
+  const pwd = document.getElementById('pwdInput').value;
+  const stored = localStorage.getItem(KEY_PWD) || DEFAULT_PWD;
+  if (pwd === stored) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    loadAll();
+  } else {
+    document.getElementById('loginError').textContent = 'Неверный пароль';
+    document.getElementById('pwdInput').value = '';
+  }
+}
+
+function doLogout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('pwdInput').value = '';
+  document.getElementById('loginError').textContent = '';
+}
+
+// ─── TABS ───
+function switchTab(name, el) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+// ─── LOAD ALL ───
+function loadAll() {
+  loadFaq();
+  loadPrompt();
+  updateStats();
+}
+
+function updateStats() {
+  const faq = getFaqData();
+  const prompt = localStorage.getItem(KEY_PROMPT) || '';
+  document.getElementById('statFaqCount').textContent = faq.length;
+  document.getElementById('statPromptLen').textContent = prompt.length;
+}
+
+// ─── FAQ ───
+function getFaqData() {
+  try { return JSON.parse(localStorage.getItem(KEY_FAQ) || '[]'); }
+  catch { return []; }
+}
+
+function loadFaq() {
+  const faq = getFaqData();
+  renderFaq(faq);
+}
+
+function renderFaq(faq) {
+  const list = document.getElementById('faqList');
+  if (faq.length === 0) {
+    list.innerHTML = '<div class="faq-empty">Нет FAQ. Нажмите «Добавить вопрос-ответ»</div>';
+    return;
+  }
+  list.innerHTML = faq.map((item, i) => `
+    <div class="faq-item" id="faq-row-${i}">
+      <div>
+        <div class="faq-item-label">Вопрос / ключевые слова</div>
+        <input type="text" value="${escHtml(item.q)}" placeholder="цены, удаление, режим работы..." id="faq-q-${i}" />
+      </div>
+      <div>
+        <div class="faq-item-label">Ответ ассистента</div>
+        <textarea placeholder="Точный ответ на этот вопрос..." id="faq-a-${i}">${escHtml(item.a)}</textarea>
+      </div>
+      <div class="faq-actions">
+        <button class="btn-icon del" title="Удалить" onclick="deleteFaqRow(${i})">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addFaqRow() {
+  const faq = collectFaqFromDOM();
+  faq.push({ q: '', a: '' });
+  renderFaq(faq);
+  // focus new row
+  const inputs = document.querySelectorAll('[id^="faq-q-"]');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+}
+
+function deleteFaqRow(i) {
+  const faq = collectFaqFromDOM();
+  faq.splice(i, 1);
+  renderFaq(faq);
+}
+
+function collectFaqFromDOM() {
+  const faq = [];
+  let i = 0;
+  while (document.getElementById('faq-q-' + i)) {
+    faq.push({
+      q: document.getElementById('faq-q-' + i).value.trim(),
+      a: document.getElementById('faq-a-' + i).value.trim()
+    });
+    i++;
+  }
+  return faq;
+}
+
+function saveFaq() {
+  const faq = collectFaqFromDOM().filter(x => x.q || x.a);
+  localStorage.setItem(KEY_FAQ, JSON.stringify(faq));
+  renderFaq(faq);
+  showStatus('faqStatus', 'Сохранено ✓');
+  updateStats();
+}
+
+// ─── SYSTEM PROMPT ───
+function loadPrompt() {
+  const val = localStorage.getItem(KEY_PROMPT) || '';
+  document.getElementById('sysPromptArea').value = val;
+}
+
+function savePrompt() {
+  const val = document.getElementById('sysPromptArea').value.trim();
+  localStorage.setItem(KEY_PROMPT, val);
+  showStatus('promptStatus', 'Сохранено ✓');
+  updateStats();
+}
+
+function resetPrompt() {
+  if (!confirm('Сбросить системный промпт к встроенному по умолчанию?')) return;
+  localStorage.removeItem(KEY_PROMPT);
+  document.getElementById('sysPromptArea').value = '';
+  showStatus('promptStatus', 'Сброшено к умолчанию ✓');
+  updateStats();
+}
+
+// ─── PASSWORD ───
+function changePwd() {
+  const p1 = document.getElementById('newPwd1').value;
+  const p2 = document.getElementById('newPwd2').value;
+  if (!p1 || p1.length < 4) { showStatus('pwdStatus', 'Минимум 4 символа', true); return; }
+  if (p1 !== p2) { showStatus('pwdStatus', 'Пароли не совпадают', true); return; }
+  localStorage.setItem(KEY_PWD, p1);
+  document.getElementById('newPwd1').value = '';
+  document.getElementById('newPwd2').value = '';
+  showStatus('pwdStatus', 'Пароль изменён ✓');
+}
+
+// ─── RESET ALL ───
+function resetAll() {
+  if (!confirm('Удалить все FAQ и сбросить системный промпт? Это нельзя отменить.')) return;
+  localStorage.removeItem(KEY_FAQ);
+  localStorage.removeItem(KEY_PROMPT);
+  loadAll();
+  showStatus('faqStatus', 'Все настройки сброшены ✓');
+}
+
+// ─── HELPERS ───
+function showStatus(id, msg, isErr) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'save-status' + (isErr ? '' : ' ok');
+  setTimeout(() => { el.textContent = ''; el.className = 'save-status'; }, 3000);
+}
+
+function escHtml(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+
+</body>
+</html>

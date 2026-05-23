@@ -8,12 +8,12 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { messages } = req.body;
+  const { messages, faq, systemPrompt } = req.body;
   if (!messages || !Array.isArray(messages)) {
     return res.status(400).json({ error: 'Invalid request' });
   }
 
-  const SYSTEM = `Ты Дента — дружелюбный ИИ-ассистент стоматологической клиники СтомаКлиник (Москва).
+  const DEFAULT_SYSTEM = `Ты Дента — дружелюбный ИИ-ассистент стоматологической клиники СтомаКлиник (Москва).
 
 Информация о клинике:
 - Адрес: ул. Стоматологическая, д. 1, Москва. Метро 5 минут, парковка бесплатно.
@@ -41,6 +41,18 @@ module.exports = async function handler(req, res) {
 - Никогда не ставь диагнозы
 - Если не знаешь ответа — скажи что лучше уточнить по телефону 8 800 123-45-67
 - Отвечай только на русском языке`;
+
+  let SYSTEM = (systemPrompt && systemPrompt.trim()) ? systemPrompt.trim() : DEFAULT_SYSTEM;
+
+  if (Array.isArray(faq) && faq.length > 0) {
+    const faqBlock = faq
+      .filter(item => item.q && item.a)
+      .map(item => `Вопрос: ${item.q}\nОтвет: ${item.a}`)
+      .join('\n---\n');
+    if (faqBlock) {
+      SYSTEM += `\n\n[Приоритетные ответы — используй их точно, когда вопрос совпадает]\n${faqBlock}`;
+    }
+  }
 
   const payload = JSON.stringify({
     systemInstruction: { parts: [{ text: SYSTEM }] },
