@@ -543,53 +543,9 @@ updateTimer();
 setInterval(updateTimer, 1000);
 
 // ─────────────────────────────────────────────────────────────────
-// CHAT
+// CHAT — Gemini AI via /api/chat
 // ─────────────────────────────────────────────────────────────────
-let userName = null;
-const BAD_WORDS = ['говно','хуй','пизда','блять','блядь','сука','ебать','ёбаный','мудак','урод','идиот','дурак','придурок'];
-
-function extractName(text) {
-  const patterns = [/меня зовут\s+([а-яёa-z]+)/i, /зови меня\s+([а-яёa-z]+)/i, /моё? имя\s+([а-яёa-z]+)/i];
-  for (const p of patterns) {
-    const m = text.match(p);
-    if (m) {
-      const n = m[1].toLowerCase();
-      if (BAD_WORDS.some(w => n.includes(w))) return '__bad__';
-      return m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase();
-    }
-  }
-  return null;
-}
-
-const KB = [
-  { keys: ['привет','здравствуй','добрый','хай','hello'], reply: () => userName ? `Привет, ${userName}! 👋 Чем могу помочь?` : 'Привет! 👋 Я ассистент СтомаКлиник. Спрашивайте!' },
-  { keys: ['кто ты','ты бот'], reply: 'Меня зовут Дента — ассистент клиники СтомаКлиник 🦷' },
-  { keys: ['меня зовут','зови меня','моё имя','мое имя'], reply: t => { const n=extractName(t); if(n==='__bad__') return 'Скажи своё настоящее имя!'; if(n){userName=n; return `Запомнила! Привет, ${n} 😊`;} return 'Напиши: "меня зовут Саша"'; } },
-  { keys: ['цена','цены','стоит','сколько','прайс'], reply: 'Цены:\n• Консультация — бесплатно\n• Кариес — от 2 500 ₽\n• Удаление — от 1 500 ₽\n• Отбеливание — от 8 000 ₽\n• Имплант — от 35 000 ₽' },
-  { keys: ['запись','записаться','приём'], reply: 'Записаться:\n• Кнопка «ЗАПИСАТЬСЯ» на сайте\n• Телефон: 8 800 123-45-67\n• Пн-Пт 9:00–20:00, Сб 10:00–18:00' },
-  { keys: ['часы','работает','режим','график'], reply: 'Пн–Пт: 9:00–20:00\nСб: 10:00–18:00\nВс: выходной' },
-  { keys: ['адрес','где','улица','метро'], reply: 'ул. Стоматологическая, д. 1, Москва. Метро 5 мин. Парковка бесплатно.' },
-  { keys: ['больно','боль','страшно','анестезия'], reply: 'Лечение безболезненно — современные анестетики. 90% пациентов боятся зря 😊' },
-  { keys: ['имплант'], reply: 'Nobel, Straumann. От 35 000 ₽ под ключ. Гарантия 5 лет. Рассрочка 0%.' },
-  { keys: ['отбеливание'], reply: 'ZOOM 4 — светлее на 6–10 тонов за 1 час. От 8 000 ₽.' },
-  { keys: ['детск','ребёнок','дети'], reply: 'Принимаем детей с 3 лет. Первый визит бесплатный.' },
-  { keys: ['срочно','болит','сейчас'], reply: '🆘 Острая боль: 8 800 123-45-67 — в день обращения!' },
-  { keys: ['рассрочка','кредит'], reply: 'Рассрочка 0% до 12 месяцев.' },
-  { keys: ['спасибо','пока','до свидания'], reply: 'Пожалуйста! Будьте здоровы! 😊' },
-];
-
-function getReply(text) {
-  const low = text.toLowerCase();
-  for (const item of KB) {
-    if (item.keys.some(k => low.includes(k))) {
-      const r = item.reply;
-      return typeof r === 'function' ? r(text) : r;
-    }
-  }
-  return userName
-    ? `${userName}, уточни вопрос 🤔 Спроси о ценах или записи!`
-    : 'Не совсем понял 🤔 Спроси: «цены», «записаться», «режим работы»';
-}
+const chatHistory = [];
 
 function toggleChat() {
   document.getElementById('chatWindow').classList.toggle('chat-window--open');
@@ -602,10 +558,37 @@ function sendMessage() {
   const input = document.getElementById('chatInput');
   const text  = input.value.trim();
   if (!text) return;
-  appendMsg(text, 'user');
   input.value = '';
+  sendToAI(text);
+}
+
+async function sendToAI(text) {
+  appendMsg(text, 'user');
+  chatHistory.push({ role: 'user', parts: [{ text }] });
   const typing = appendTyping();
-  setTimeout(() => { typing.remove(); appendMsg(getReply(text), 'bot'); }, 600);
+
+  let faq = [];
+  let systemPrompt = '';
+  try {
+    faq = JSON.parse(localStorage.getItem('dentaFaq') || '[]');
+    systemPrompt = localStorage.getItem('dentaSystemPrompt') || '';
+  } catch (_) {}
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: chatHistory, faq, systemPrompt })
+    });
+    const data = await res.json();
+    const reply = data.text || 'Извините, не смог ответить. Позвоните нам: 8 800 123-45-67';
+    typing.remove();
+    appendMsg(reply, 'bot');
+    chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+  } catch (err) {
+    typing.remove();
+    appendMsg('Нет соединения 😔 Позвоните: 8 800 123-45-67', 'bot');
+  }
 }
 
 function appendMsg(text, who) {
