@@ -1,11 +1,10 @@
 const https = require('https');
-const fs = require('fs');
-const path = require('path');
 
 function loadConfig() {
   try {
-    const raw = fs.readFileSync(path.join(__dirname, '..', 'config.json'), 'utf8');
-    return JSON.parse(raw);
+    // delete require cache so each cold start gets fresh config
+    delete require.cache[require.resolve('../config.json')];
+    return require('../config.json');
   } catch (_) {
     return { systemPrompt: '', faq: [] };
   }
