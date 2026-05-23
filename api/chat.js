@@ -1,4 +1,15 @@
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
+
+function loadConfig() {
+  try {
+    const raw = fs.readFileSync(path.join(__dirname, '..', 'config.json'), 'utf8');
+    return JSON.parse(raw);
+  } catch (_) {
+    return { systemPrompt: '', faq: [] };
+  }
+}
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,10 +19,12 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { messages, faq, systemPrompt } = req.body;
+  const { messages } = req.body;
   if (!messages || !Array.isArray(messages)) {
     return res.status(400).json({ error: 'Invalid request' });
   }
+
+  const config = loadConfig();
 
   const DEFAULT_SYSTEM = `Ты Дента — дружелюбный ИИ-ассистент стоматологической клиники СтомаКлиник (Москва).
 
@@ -42,9 +55,12 @@ module.exports = async function handler(req, res) {
 - Если не знаешь ответа — скажи что лучше уточнить по телефону 8 800 123-45-67
 - Отвечай только на русском языке`;
 
-  let SYSTEM = (systemPrompt && systemPrompt.trim()) ? systemPrompt.trim() : DEFAULT_SYSTEM;
+  let SYSTEM = (config.systemPrompt && config.systemPrompt.trim())
+    ? config.systemPrompt.trim()
+    : DEFAULT_SYSTEM;
 
-  if (Array.isArray(faq) && faq.length > 0) {
+  const faq = Array.isArray(config.faq) ? config.faq : [];
+  if (faq.length > 0) {
     const faqBlock = faq
       .filter(item => item.q && item.a)
       .map(item => `Вопрос: ${item.q}\nОтвет: ${item.a}`)

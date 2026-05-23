@@ -203,17 +203,10 @@ async function sendToAI(text) {
   const typing = aiAppendTyping();
 
   try {
-    let faq = [];
-    let systemPrompt = '';
-    try {
-      faq = JSON.parse(localStorage.getItem('dentaFaq') || '[]');
-      systemPrompt = localStorage.getItem('dentaSystemPrompt') || '';
-    } catch (_) {}
-
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: chatHistory, faq, systemPrompt })
+      body: JSON.stringify({ messages: chatHistory })
     });
 
     const data = await res.json();
