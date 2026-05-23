@@ -1,17 +1,36 @@
 const https = require('https');
 
-const CONFIG_URL = 'https://raw.githubusercontent.com/kereyevzh90-pixel/stamatologia/main/config.json';
+// Cache config for 30 seconds to avoid GitHub rate limits
+let _cache = null;
+let _cacheAt = 0;
 
 function fetchConfig() {
+  const now = Date.now();
+  if (_cache && now - _cacheAt < 30000) return Promise.resolve(_cache);
+
   return new Promise((resolve) => {
-    https.get(CONFIG_URL, (res) => {
+    const req = https.request({
+      hostname: 'raw.githubusercontent.com',
+      path: '/kereyevzh90-pixel/stamatologia/main/config.json',
+      method: 'GET',
+      headers: { 'User-Agent': 'DentaBot/1.0', 'Cache-Control': 'no-cache' }
+    }, (res) => {
       let raw = '';
-      res.on('data', chunk => { raw += chunk; });
+      res.on('data', c => { raw += c; });
       res.on('end', () => {
-        try { resolve(JSON.parse(raw)); }
-        catch (_) { resolve({ systemPrompt: '', faq: [] }); }
+        try {
+          const cfg = JSON.parse(raw);
+          _cache = cfg;
+          _cacheAt = Date.now();
+          resolve(cfg);
+        } catch (_) {
+          resolve(_cache || { systemPrompt: '', faq: [] });
+        }
       });
-    }).on('error', () => resolve({ systemPrompt: '', faq: [] }));
+    });
+    req.on('error', () => resolve(_cache || { systemPrompt: '', faq: [] }));
+    req.setTimeout(4000, () => { req.destroy(); resolve(_cache || { systemPrompt: '', faq: [] }); });
+    req.end();
   });
 }
 
@@ -57,7 +76,6 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid request' });
   }
 
-  // Load config fresh from GitHub on every request
   const config = await fetchConfig();
 
   let SYSTEM = (config.systemPrompt && config.systemPrompt.trim())
@@ -71,17 +89,14 @@ module.exports = async function handler(req, res) {
       .map(item => `Вопрос: ${item.q}\nОтвет: ${item.a}`)
       .join('\n---\n');
     if (faqBlock) {
-      SYSTEM += `\n\n[Приоритетные ответы клиники — используй их точно, когда тема совпадает]\n${faqBlock}`;
+      SYSTEM += `\n\n[Приоритетные ответы — используй их точно]\n${faqBlock}`;
     }
   }
 
   const payload = JSON.stringify({
     systemInstruction: { parts: [{ text: SYSTEM }] },
     contents: messages,
-    generationConfig: {
-      temperature: 0.7,
-      maxOutputTokens: 400,
-    },
+    generationConfig: { temperature: 0.7, maxOutputTokens: 400 },
     safetySettings: [
       { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
       { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' },
@@ -99,19 +114,14 @@ module.exports = async function handler(req, res) {
           'Content-Length': Buffer.byteLength(payload),
         },
       };
-
       const request = https.request(options, (response) => {
         let raw = '';
         response.on('data', chunk => { raw += chunk; });
         response.on('end', () => {
-          try {
-            resolve({ status: response.statusCode, body: JSON.parse(raw) });
-          } catch (e) {
-            resolve({ status: response.statusCode, body: { error: { message: raw } } });
-          }
+          try { resolve({ status: response.statusCode, body: JSON.parse(raw) }); }
+          catch (e) { resolve({ status: response.statusCode, body: { error: { message: raw } } }); }
         });
       });
-
       request.on('error', reject);
       request.write(payload);
       request.end();
@@ -119,14 +129,14 @@ module.exports = async function handler(req, res) {
 
     if (result.status !== 200) {
       const errMsg = result.body.error?.message || JSON.stringify(result.body);
-      return res.status(200).json({ text: 'ОШИБКА GEMINI: ' + errMsg });
+      return res.status(200).json({ text: 'Ошибка API: ' + errMsg });
     }
 
     const text = result.body.candidates?.[0]?.content?.parts?.[0]?.text
-      || 'ОШИБКА: нет ответа от Gemini. ' + JSON.stringify(result.body).slice(0, 200);
+      || 'Нет ответа от AI. ' + JSON.stringify(result.body).slice(0, 200);
     res.json({ text });
 
   } catch (err) {
-    res.status(200).json({ text: 'ОШИБКА СЕТИ: ' + err.message });
+    res.status(200).json({ text: 'Ошибка сети: ' + err.message });
   }
 };
