@@ -210,7 +210,7 @@ async function sendToAI(text) {
     });
 
     const data = await res.json();
-    const reply = data.text || 'Извините, не смог ответить. Позвоните нам: 8 800 123-45-67';
+    const reply = data.text || ('DEBUG: ' + JSON.stringify(data));
 
     typing.remove();
     aiAppendMsg(reply, 'bot');
