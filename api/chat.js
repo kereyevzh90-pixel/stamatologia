@@ -1,31 +1,21 @@
 const https = require('https');
 
-function loadConfig() {
-  try {
-    // delete require cache so each cold start gets fresh config
-    delete require.cache[require.resolve('../config.json')];
-    return require('../config.json');
-  } catch (_) {
-    return { systemPrompt: '', faq: [] };
-  }
+const CONFIG_URL = 'https://raw.githubusercontent.com/kereyevzh90-pixel/stamatologia/main/config.json';
+
+function fetchConfig() {
+  return new Promise((resolve) => {
+    https.get(CONFIG_URL, (res) => {
+      let raw = '';
+      res.on('data', chunk => { raw += chunk; });
+      res.on('end', () => {
+        try { resolve(JSON.parse(raw)); }
+        catch (_) { resolve({ systemPrompt: '', faq: [] }); }
+      });
+    }).on('error', () => resolve({ systemPrompt: '', faq: [] }));
+  });
 }
 
-module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-
-  const { messages } = req.body;
-  if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ error: 'Invalid request' });
-  }
-
-  const config = loadConfig();
-
-  const DEFAULT_SYSTEM = `Ты Дента — дружелюбный ИИ-ассистент стоматологической клиники СтомаКлиник (Москва).
+const DEFAULT_SYSTEM = `Ты Дента — дружелюбный ИИ-ассистент стоматологической клиники СтомаКлиник (Москва).
 
 Информация о клинике:
 - Адрес: ул. Стоматологическая, д. 1, Москва. Метро 5 минут, парковка бесплатно.
@@ -54,6 +44,22 @@ module.exports = async function handler(req, res) {
 - Если не знаешь ответа — скажи что лучше уточнить по телефону 8 800 123-45-67
 - Отвечай только на русском языке`;
 
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const { messages } = req.body;
+  if (!messages || !Array.isArray(messages)) {
+    return res.status(400).json({ error: 'Invalid request' });
+  }
+
+  // Load config fresh from GitHub on every request
+  const config = await fetchConfig();
+
   let SYSTEM = (config.systemPrompt && config.systemPrompt.trim())
     ? config.systemPrompt.trim()
     : DEFAULT_SYSTEM;
@@ -65,7 +71,7 @@ module.exports = async function handler(req, res) {
       .map(item => `Вопрос: ${item.q}\nОтвет: ${item.a}`)
       .join('\n---\n');
     if (faqBlock) {
-      SYSTEM += `\n\n[Приоритетные ответы — используй их точно, когда вопрос совпадает]\n${faqBlock}`;
+      SYSTEM += `\n\n[Приоритетные ответы клиники — используй их точно, когда тема совпадает]\n${faqBlock}`;
     }
   }
 
@@ -73,7 +79,7 @@ module.exports = async function handler(req, res) {
     systemInstruction: { parts: [{ text: SYSTEM }] },
     contents: messages,
     generationConfig: {
-      temperature: 0.75,
+      temperature: 0.7,
       maxOutputTokens: 400,
     },
     safetySettings: [
@@ -117,7 +123,7 @@ module.exports = async function handler(req, res) {
     }
 
     const text = result.body.candidates?.[0]?.content?.parts?.[0]?.text
-      || 'ОШИБКА: нет candidates. Ответ: ' + JSON.stringify(result.body).slice(0, 200);
+      || 'ОШИБКА: нет ответа от Gemini. ' + JSON.stringify(result.body).slice(0, 200);
     res.json({ text });
 
   } catch (err) {
